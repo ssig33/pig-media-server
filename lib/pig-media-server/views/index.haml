@@ -1,0 +1,45 @@
+!!!
+%title Pig Media Server
+%meta(content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport')
+%script{src: 'http://code.jquery.com/jquery.min.js'}
+%script{src: '/storage.js'}
+%script{src: '/movie.js'} 
+%script{src: '/unread.js'}
+%link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
+:css
+  .none{display:none}
+#area=''
+#all
+  %h1 Pig Media Server 
+  %form{method: 'GET', action: '/'}
+    %input{name: 'query', value: params[:query]}
+    %button Search
+  -if @page 
+    %p.autopagerize_page_element
+      -@list.each do |l|
+        -next unless l.record
+        %span.main_span{id: l.key}
+          !=partial :"_new_flag", locals: {record: l}
+          %a.main_link{key: l.key, href: l.url}=h(l.name)
+          !=partial :"_ft_#{l.type}", locals: {record: l}
+          %span.mtime=l.mtime.to_s.sub(/\ \+0900$/, '')
+          %span.size=number_to_human_size(l.size).encode('UTF-8', 'UTF-8')
+          %a.meta{href: "/meta/#{l.key}"} Meta
+          -if l.srt
+            %a.sub.meta{href: "/sub/#{l.key}"} Sub
+          -if l.type == 'txt' or l.type == 'read'
+            %a.ao.meta{href: "/ao/#{l.key}"} Aozora
+          %a.delete{href: 'javascript:void(0)', onclick: "var ok=confirm('Really?'); if (ok) location.href='/delete/#{l.key}?href=#{CGI.escape request.url}'; return false;"} Delete
+          %br
+    %p.pager
+      -if params[:query] and params[:query].empty? == false
+        %a{href: "/?query=#{CGI.escape params[:query]}&page=#{@page+1}"} Next
+        %a{href: "/edit?query=#{CGI.escape params[:query]}"} Edit
+      -elsif params[:sub]
+        %a{href: "/?sub=true&page=#{@page+1}"} Next
+      -else
+        %a{href: "/latest?page=#{@page+1}"} Next
+
+.none
+  %span#action=@action
+  %canvas#canvas

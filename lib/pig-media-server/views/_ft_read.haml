@@ -1,0 +1,9 @@
+%a{href: 'javascript:void(0)', key: record.key, class: record.type} Read
+-#
+  - if session[:user_id] and record.size.to_i < 1024*1024*200
+    %a.kindle{href: "/to_kindle/#{record.key}?path=#{CGI.escape request.url}"} Send To Kindle
+  -else
+    - unless record.kindle
+      %a.kindle{href: "/convert_to_kindle/#{record.key}?path=#{CGI.escape request.url}"} Convert to Kindle
+    -else
+      %a.kindle{href: record.kindle_url, target: '_blank'} Download Kindle

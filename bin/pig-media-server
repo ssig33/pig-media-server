@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'pig-media-server'
+require 'pig-media-server/cli'

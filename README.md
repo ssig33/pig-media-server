@@ -1,4 +1,4 @@
-# Pig::Media::Server
+# PigMediaServer
 
 TODO: Write a gem description
 

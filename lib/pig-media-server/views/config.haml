@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+%meta{charset: 'UTF-8'}
+%title Config - Pig Media Server
+%script{src: 'http://code.jquery.com/jquery.min.js'}
+%script{src: '/config.js'}
+%link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
+%meta(content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport')
+#all
+  -unless session[:user_id]
+    %a{href: '/sessions'} Login
+  -else
+    Login as
+    %span#user_id=session[:user_id]
+    %a{href: '/sessions'} Logout
+  %h1 Pig Media Server
+  %form{method: 'GET', action: '/'}
+    %input{name: 'query', value: params[:query]}
+    %button Search
+    %a{href: '/latest'} Latest
+    %a{href: '/config'} Config
+  %h2 Config
+  %table
+    %tr
+      %th Gyazo
+      %td
+        %input#gyazo{size: 60}
+    %tr
+      %td 
+        %button#save Save

@@ -16,7 +16,7 @@ class Pig
   def size; self.record.size;end
   def metadata; self.record.metadata;end
   def srt; self.record.srt;end
-  def url; '/volume/' + URI.encode(self.record.path.sub(/#{config['path'].sub(/\//, '\/')}/, ''));end
+  def url; '/volume' + URI.encode(self.record.path.sub(/#{config['path'].sub(/\//, '\/')}/, ''));end
   def type
     case self.name.split('.').last
     when 'mp4', 'MP4', 'webm'

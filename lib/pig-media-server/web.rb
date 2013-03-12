@@ -1,27 +1,78 @@
 require 'pig-media-server'
 require 'pig-media-server/model/pig'
 require 'sinatra/base'
+require 'sinatra/flash'
+require 'net/http'
 require 'sass'
 require 'coffee_script'
 
 module PigMediaServer
+  class Gyazo
+    def self.post url, point
+      imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first
+      boundary = '----BOUNDARYBOUNDARY----'
+      id = rand(256**16).to_s(16) 
+
+      data = <<EOF
+--#{boundary}\r
+content-disposition: form-data; name="id"\r
+\r
+#{id}\r
+--#{boundary}\r
+content-disposition: form-data; name="imagedata"; filename="gyazo.com"\r
+\r
+#{imagedata}\r
+--#{boundary}--\r
+EOF
+      header ={
+        'Content-Length' => data.length.to_s,
+        'Content-type' => "multipart/form-data; boundary=#{boundary}",
+        'User-Agent' => 'ssig33.com/1.0'
+      }
+      proxy_host, proxy_port = nil, nil
+      uri = URI.parse point
+      Net::HTTP::Proxy(proxy_host, proxy_port).start(uri.host,80) {|http|
+        res = http.post(uri.path, data, header).body
+        puts res
+        return res
+      }
+    end
+  end
+
   class Web < Sinatra::Base
+    register Sinatra::Flash
     configure do
       set :sessions, true
       set :haml, escape_html: true
       set :haml, attr_wrapper: '"'
       use Rack::Session::Cookie, key: 'rack.session', expire_after: 60*60*24*28, secret: rand(256**16).to_s(16)
     end
+    
     get '/' do
-    if params[:query]
-      redirect '/latest' if params[:query].empty?
-      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
-      @action = 'list'
-      @list = Pig.search params.merge(page: @page)
-    end
+      if params[:query]
+        redirect '/latest' if params[:query].empty?
+        @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
+        @action = 'list'
+        @list = Pig.search params.merge(page: @page)
+      end
       haml :index
     end
 
+    get '/latest' do
+      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
+      size = params[:size] ? params[:size].to_i : 50
+      @list = Groonga['Files'].select.paginate([key: 'mtime', order: 'descending'], size: size, page: @page).map{|x| Pig.new(x)}
+      @action = 'list'
+      haml :index
+    end
+
+    post '/gyazo' do
+      url = PigMediaServer::Gyazo.post params[:url], params[:point]
+      content_type :json
+      {url: url}.to_json
+    end
+
+    get('/config'){haml :config}
     get('/*.css'){scss params[:splat].first.to_sym}
     get('/*.js'){coffee params[:splat].first.to_sym}
 

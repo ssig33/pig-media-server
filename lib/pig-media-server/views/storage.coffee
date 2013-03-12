@@ -14,3 +14,13 @@ window.get_recents = (func)->
       recents = {}
     func(recents)
 
+window.save_recents = (recents)->
+  if $('#user_id').text() and $('#user_id').text() != ''
+    $.get('/hash').success((data)->
+      data['recents'] = recents
+      $.post('/hash', json: JSON.stringify(data))
+    )
+    
+  else
+    window.localStorage['recents'] = JSON.stringify recents
+

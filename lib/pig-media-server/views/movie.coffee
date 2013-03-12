@@ -1,10 +1,11 @@
 watch = (link)->
-  key = link.getAttribute('key')
+  $link = $(link)
+  key = $(link).attr 'key'
   url = $("##{key} .main_link").attr('href')
-  title = link.getAttribute('title')
+  title = $(link).attr 'title'
   srt = false
-  srt = true if $(link).attr('srt') == 'true'
-  $(link).click ->
+  srt = true if $link.attr('srt') == 'true'
+  $link.click ->
     $('#area').html('')
     $('#area').css 'min-height', 0
     width = $('body').width()
@@ -34,7 +35,6 @@ watch = (link)->
     $('<span>').text('Rate:').appendTo('#area')
     $('<input>').attr('id', 'playback_rate').appendTo('#area').val(1).attr('size',2)
     $('<span>').html('<br> Now Playing : '+title).appendTo('#area')
-    
     $('<div>').attr('class', 'space').appendTo('#area')
     video = document.querySelector '#play'
     video.load()
@@ -51,7 +51,6 @@ watch = (link)->
         ,2000
       playback_rate_loop()
     )
-    
 
 playback_rate_loop = ->
   setTimeout ->
@@ -63,14 +62,6 @@ playback_rate_loop = ->
 
 initialize_movie = ->
   $.each $('a.watch'), -> watch(this)
-  $('.main_link').click(->
-    window.get_recents (recents)->
-      key = $(this).attr 'key'
-      recents['movie/'+key] = {time: parseInt((new Date)/1000), type: 'movie'}
-      window.save_recents recents
-  )
-
-
 
 movie_size = (origin_height)->
   setTimeout ->

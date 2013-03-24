@@ -4,9 +4,23 @@ require 'sinatra/base'
 require 'sinatra/flash'
 require 'net/http'
 require 'sass'
+require 'haml'
 require 'coffee_script'
+require 'rack/csrf'
+require 'json'
 
 module PigMediaServer
+  class UserData
+    def self.save json, user_id, path
+      open("#{path}/#{user_id}.json", "w"){|f| f.puts json}
+      true
+    end
+
+    def self.load user_id, path
+      return JSON.parse(open("#{path}/#{user_id}.json").read) rescue return {}
+    end
+  end
+
   class Gyazo
     def self.post url, point
       imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first
@@ -40,6 +54,7 @@ EOF
   end
 
   class Web < Sinatra::Base
+    @@config = Pit.get "Pig Media Server"
     register Sinatra::Flash
     configure do
       set :sessions, true
@@ -72,10 +87,27 @@ EOF
       {url: url}.to_json
     end
 
+    get '/sessions' do
+      if session[:user_id]
+        session[:user_id] = nil
+        redirect '/'
+      else
+        haml :sessions
+      end
+    end
+
+    post '/sessions' do
+      session[:user_id] = params[:user_id]
+      redirect '/'
+    end
+
+    get('/hash'){content_type :json; hash().to_json}
+    post('/hash'){PigMediaServer::UserData.save params[:json], session[:user_id], @@config['user_data_path']}
+
     get('/config'){haml :config}
     get('/*.css'){scss params[:splat].first.to_sym}
     get('/*.js'){coffee params[:splat].first.to_sym}
-
+    
     helpers do
       def h str; CGI.escapeHTML str.to_s; end
       def partial(template, *args)
@@ -89,6 +121,13 @@ EOF
           haml(template, options)
         end
       end 
+      def hash
+        if session[:user_id]
+          return PigMediaServer::UserData.load session[:user_id], @@config['user_data_path']
+        else
+          return {}
+        end
+      end
       
       def markdown str
          str = str.to_s

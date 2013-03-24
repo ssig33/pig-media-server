@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+%meta{charset: 'UTF-8'}
+%title Pork
+<link href='/app.css' media='screen' rel='stylesheet' type='text/css' />
+<meta content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport' />
+#all
+  %form{method: 'POST'}
+    !=Rack::Csrf.tag(env)
+    %b User:
+    %input{name: 'user_id'}
+    %input{type: :submit, value: :Submit}

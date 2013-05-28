@@ -54,8 +54,8 @@ EOF
   end
 
   class Web < Sinatra::Base
-    @@config = Pit.get "Pig Media Server"
     register Sinatra::Flash
+    
     configure do
       set :sessions, true
       set :haml, escape_html: true
@@ -70,6 +70,14 @@ EOF
         @action = 'list'
         @list = Pig.search params.merge(page: @page)
       end
+      haml :index
+    end
+
+    get '/custom' do
+      c = config['custom_list'][params[:name]]
+      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
+      @action = 'list'
+      @list = Pig.find JSON.parse(open(c).read)
       haml :index
     end
 
@@ -102,13 +110,16 @@ EOF
     end
 
     get('/hash'){content_type :json; hash().to_json}
-    post('/hash'){PigMediaServer::UserData.save params[:json], session[:user_id], @@config['user_data_path']}
+    post('/hash'){PigMediaServer::UserData.save params[:json], session[:user_id], config['user_data_path']}
 
     get('/config'){haml :config}
     get('/*.css'){scss params[:splat].first.to_sym}
     get('/*.js'){coffee params[:splat].first.to_sym}
     
     helpers do
+      def config
+        Pit.get "Pig Media Server"
+      end
       def h str; CGI.escapeHTML str.to_s; end
       def partial(template, *args)
         options = args.last.is_a?(Hash) ? args.pop : {}
@@ -123,7 +134,7 @@ EOF
       end 
       def hash
         if session[:user_id]
-          return PigMediaServer::UserData.load session[:user_id], @@config['user_data_path']
+          return PigMediaServer::UserData.load session[:user_id], config['user_data_path']
         else
           return {}
         end

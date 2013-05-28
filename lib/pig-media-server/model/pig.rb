@@ -41,7 +41,12 @@ str.chomp.chomp
 
 
   def self.find key
-    self.new Groonga['Files'][key]
+    case key.class.to_s
+    when 'Array'
+      return key.map{|x| self.new Groonga['Files'][x]}
+    when 'String'
+      return self.new Groonga['Files'][key]
+    end
   end
 
   def self.search opts

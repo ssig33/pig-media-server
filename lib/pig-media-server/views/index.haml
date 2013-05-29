@@ -2,9 +2,9 @@
 %title Pig Media Server
 %meta(content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport')
 %script{src: 'http://code.jquery.com/jquery.min.js'}
-%script{src: '/storage.js'}
-%script{src: '/session.js'}
-%script{src: '/movie.js'} 
+-%w{storage session movie unread}.each do |js|
+  %script{src: "/#{js}.js"}
+
 %link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
 :css
   .none{display:none}

@@ -60,7 +60,7 @@ EOF
       set :sessions, true
       set :haml, escape_html: true
       set :haml, attr_wrapper: '"'
-      use Rack::Session::Cookie, key: 'rack.session', expire_after: 60*60*24*28, secret: rand(256**16).to_s(16)
+      use Rack::Session::Cookie, expire_after: 60*60*24*28, secret: $session_secret || rand(256**16).to_s(16)
     end
     
     get '/' do

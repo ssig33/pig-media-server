@@ -24,3 +24,9 @@ window.save_recents = (recents)->
   else
     window.localStorage['recents'] = JSON.stringify recents
 
+window.save_to_pig = (hash)->
+  $.get('/hash').success((data)->
+    data = $.extend data, hash
+    $.post('/hash', json: JSON.stringify(data)))
+window.get_from_pig = (key, func)-> $.get('/hash').success((data)-> func(data[key]))
+

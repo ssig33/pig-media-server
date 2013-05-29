@@ -46,11 +46,14 @@ watch = (link)->
         recents['movie/'+key] = {time: parseInt((new Date)/1000), type: 'movie'}
         window.save_recents recents
         $('.new_flag').text('')
-        setTimeout ->
-          window.set_new()
-        ,2000
+        unless $('#action').text() == 'remote'
+          setTimeout ->
+            window.set_new()
+          ,2000
       playback_rate_loop()
     )
+
+window.watch_movie = watch
 
 playback_rate_loop = ->
   setTimeout ->
@@ -132,12 +135,16 @@ key_func_g = ->
 key_func_p = ->
   pause() if $('video')[0]
 
+remote = ->
+  $('a.remote').click ->
+    save_to_pig remote_key: $(this).attr('key')
 
 
 $ ->
   initialize_movie() if $('#action').text() == 'list' or $('#action').text() == 'others'
   next_loop()
   movie_size(0)
+  remote()
   $(window).keyup (e)->
     switch e.keyCode
       when 74

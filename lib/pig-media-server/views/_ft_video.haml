@@ -2,3 +2,5 @@
   %a.watch{href: 'javascript:void(0)', srt: 'true', url: record.url, key: record.key, title: record.name}watch
 -else
   %a.watch{href: 'javascript:void(0)', url: record.url, key: record.key, title: record.name}watch
+-if hash()['remote']
+  %a.remote{href: 'javascript:void(0)', key: record.key} remote

@@ -95,6 +95,14 @@ EOF
       {url: url}.to_json
     end
 
+    get '/remote' do
+      if request.xhr? and params[:key]
+        return partial :_link, locals: {l: Pig.find(params[:key])}
+      end
+      return haml :remote
+    end
+
+
     get '/sessions' do
       if session[:user_id]
         session[:user_id] = nil

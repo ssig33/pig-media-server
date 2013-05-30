@@ -3,6 +3,7 @@
 %title Config - Pig Media Server
 %script{src: 'http://code.jquery.com/jquery.min.js'}
 %script{src: '/config.js'}
+%script{src: '/storage.js'}
 %link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
 %meta(content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport')
 #all
@@ -24,6 +25,23 @@
       %th Gyazo
       %td
         %input#gyazo{size: 60}
+    -if session[:user_id]
+      %tr
+        %th Use Remote?
+        %td
+          -if hash()['remote']
+            %input#remote{type: :checkbox}(checked)
+          -else
+            %input#remote{type: :checkbox}
+      %tr
+        %th Kindle To
+        %td
+          %input#kindle_to{size: 60}
+      %tr
+        %th Kindle From
+        %td
+          %input#kindle_from{size: 60}
+
     %tr
       %td 
         %button#save Save

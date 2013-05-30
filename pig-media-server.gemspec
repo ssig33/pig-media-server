@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["mail@ssig33.com"]
   gem.description   = %q{Pig Media Server}
   gem.summary       = %q{Pig Media Server}
-  gem.homepage      = ""
+  gem.homepage      = "http://github.com/ssig33/pig-media-server"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = %w(pig-media-server)

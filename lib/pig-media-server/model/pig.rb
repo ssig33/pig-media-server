@@ -32,6 +32,9 @@ class Pig
       'other'
     end
   end
+  def path
+    self.record.path.sub(/#{config['path'].sub(/\//, '\/')}/, '')
+  end
   def comic
     Comic.new self.record
   end

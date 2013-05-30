@@ -6,8 +6,10 @@ require 'sinatra/flash'
 require 'net/http'
 require 'sass'
 require 'haml'
+require 'fileutils'
 require 'coffee_script'
 require 'rack/csrf'
+require 'redcarpet'
 require 'json'
 
 module PigMediaServer
@@ -90,6 +92,10 @@ EOF
       haml :index
     end
 
+    get('/meta/:key'){@p = Pig.find(params[:key]);haml :meta}
+    get('/sub/:key'){@p = Pig.find(params[:key]);haml :sub}
+    get('/webvtt/:key'){@p = Pig.find(params[:key]); content_type :text; @p.webvtt}
+
     get '/read/:key' do
       if request.xhr?
         @record = Pig.find params[:key] rescue nil
@@ -153,7 +159,30 @@ EOF
     get('/swipe.js'){content_type :js;erb :swipe}
     get('/*.css'){scss params[:splat].first.to_sym}
     get('/*.js'){coffee params[:splat].first.to_sym}
-    
+
+    post '/api/save' do
+      key = Digest::MD5.hexdigest(params[:name]).to_s
+      FileUtils.mkdir_p "#{config['user_data_path']}/api_data"
+      open("#{config['user_data_path']}/api_data/#{key}", 'w'){|x| x.puts params[:body]}
+      true
+    end
+    get '/api/get' do
+      key = Digest::MD5.hexdigest(params[:name]).to_s
+      FileUtils.mkdir_p "#{config['user_data_path']}/api_data"
+      if File.exist? "#{config['user_data_path']}/api_data/#{key}"
+        open("#{config['user_data_path']}/api_data/#{key}").read
+      else
+        nil
+      end
+    end
+    post '/api/capapi' do
+      record = Groonga['Files'][params[:key]]
+      name = "#{rand(256**16).to_s(16)}.jpg"
+      system "ffmpeg -ss #{params[:time]} -vframes 1 -i \"#{record.path}\" -f image2 #{config['gyazo_path']}/#{name}"
+      "#{config['gyazo_prefix']}/#{name}"
+    end
+
+
     helpers do
       def config
         Pit.get "Pig Media Server"

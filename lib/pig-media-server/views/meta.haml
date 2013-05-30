@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+%meta{charset: 'UTF-8'}
+%title Pig Media Server
+%script{src: 'http://code.jquery.com/jquery.min.js'}
+%script{src: '/meta.js'}
+
+%link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
+<meta content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport' />
+#all
+  %h1 pig.ssig33.com
+  %p=flash[:notice]
+  %form{method: 'GET', action: '/'}
+    %input{name: 'query', value: params[:query]}
+    %button Search
+    %a{href: '/latest'} Latest
+    %a{href: '/?syobo=true'} Syobocal
+    %a{href: '/config'} Config
+  %h2 Metadata
+  %h3=@p.name
+  %h4 Path
+  %p=@p.record.path
+  %h4 Size
+  %p=number_to_human_size @p.size
+  -case @p.type 
+  -when 'video'
+    %p
+      %video{src: @p.url, controls: :controls, style: 'max-width:50%;max-height:50%'}
+    %p
+    -if hash()['remote']
+      %a.remote{href: 'javascript:void(0)', key: @p.record.key} remote 
+  -if @p.metadata
+    %h4 Data
+    %p#aspect=''
+    %p!=@p.metadata.gsub(/\n/, '<br>')
+  -else
+    %p#aspect=''
+  .none
+    %span#key=params[:key]

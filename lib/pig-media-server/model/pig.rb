@@ -1,4 +1,5 @@
 #coding:utf-8
+require 'fileutils'
 require 'pig-media-server/model/migrate'
 
 class Pig
@@ -25,6 +26,8 @@ class Pig
       'read'
     when 'txt', 'TXT'
       'txt'
+    when 'mobi'
+      'mobi'
     else
       'other'
     end
@@ -39,6 +42,10 @@ WEBVTT
 #{self.srt.split("\n").delete_if{|x| x.to_i.to_s == x.chomp}.map{|x| if x =~ /\d\d:\d\d/; x.gsub!(/,/, '.');else; x = x.gsub(/</, '＜').gsub(/>/, '＞');end; x}.join("\n")}
 EOS
 str.chomp.chomp
+  end
+  def to_kindle user_id
+    FileUtils.mkdir_p "#{self.config['user_data_path']}/kindle/queue"
+    open("#{self.config['user_data_path']}/kindle/queue/#{self.key}_#{user_id}", 'w'){|x| x.puts ''}
   end
 
 

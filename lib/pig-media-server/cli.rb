@@ -18,4 +18,7 @@ when 'server'
   port = ARGV[1] ? ARGV[1].to_i : 8080
   require 'pig-media-server/web'
   PigMediaServer::Web.run! host: '0.0.0.0', port: port
+when 'kindle-send'
+  require 'pig-media-server/kindle_send'
+  PigMediaServer::KindleSend.new.run
 end

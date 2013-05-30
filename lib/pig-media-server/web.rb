@@ -129,6 +129,17 @@ EOF
       end
     end
 
+    get '/to_kindle/:key' do
+      flash[:notice] = 'Request Accepted. Please wait minutes.'
+      Pig.find(params[:key]).to_kindle(session[:user_id])
+      if params[:path]
+        redirect params[:path]
+      else
+        redirect "/ao/#{params[:key]}"
+      end
+    end
+
+
     post '/sessions' do
       session[:user_id] = params[:user_id]
       redirect '/'

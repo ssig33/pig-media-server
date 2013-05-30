@@ -27,6 +27,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sewell'
   gem.add_dependency 'rmagick'
   gem.add_dependency 'zipruby'
+  gem.add_dependency 'pony'
+  gem.add_dependency 'mail'
   gem.add_dependency 'coffee-script'
   gem.add_dependency 'sinatra-flash'
 end

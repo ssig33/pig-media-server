@@ -1,5 +1,6 @@
 require 'pig-media-server'
 require 'pig-media-server/model/pig'
+require 'pig-media-server/model/comic'
 require 'sinatra/base'
 require 'sinatra/flash'
 require 'net/http'
@@ -89,6 +90,22 @@ EOF
       haml :index
     end
 
+    get '/read/:key' do
+      if request.xhr?
+        @record = Pig.find params[:key] rescue nil
+        @comic = @record.comic
+        haml :read
+      else
+        raise
+      end
+    end
+    get('/book/info/:key'){ content_type :json; Pig.find(params[:key]).comic.info(params[:page]).to_json}
+    get '/book/image' do
+      image, type = Pig.find(params[:id]).comic.page(params[:page])
+      content_type type
+      image
+    end
+
     post '/gyazo' do
       url = PigMediaServer::Gyazo.post params[:url], params[:point]
       content_type :json
@@ -121,6 +138,8 @@ EOF
     post('/hash'){PigMediaServer::UserData.save params[:json], session[:user_id], config['user_data_path']}
 
     get('/config'){haml :config}
+    get('/book2.js'){content_type :js;erb :book2}
+    get('/swipe.js'){content_type :js;erb :swipe}
     get('/*.css'){scss params[:splat].first.to_sym}
     get('/*.js'){coffee params[:splat].first.to_sym}
     

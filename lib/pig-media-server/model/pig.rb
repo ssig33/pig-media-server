@@ -29,6 +29,9 @@ class Pig
       'other'
     end
   end
+  def comic
+    Comic.new self.record
+  end
   def webvtt
 str = <<EOS 
 WEBVTT

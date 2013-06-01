@@ -9,7 +9,7 @@ class Pig
       record.size = File::Stat.new(record.path).size.to_s rescue nil
     end
     self.record = record
-    self.config = Pit.get "Pig Media Server"
+    self.config = $config || Pit.get("Pig Media Server")
   end
   def key; self.record._key;end
   def name; self.record.path.split('/').last; end

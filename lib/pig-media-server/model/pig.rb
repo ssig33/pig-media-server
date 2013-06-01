@@ -2,6 +2,8 @@
 require 'fileutils'
 require 'pig-media-server/model/migrate'
 
+CONFIG = Pit.get('Pig Media Server')
+
 class Pig
   attr_accessor :record, :config
   def initialize record
@@ -9,7 +11,7 @@ class Pig
       record.size = File::Stat.new(record.path).size.to_s rescue nil
     end
     self.record = record
-    self.config = $config || Pit.get("Pig Media Server")
+    self.config = CONFIG
   end
   def key; self.record._key;end
   def name; self.record.path.split('/').last; end

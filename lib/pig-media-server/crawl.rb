@@ -12,6 +12,7 @@ module PigMediaServer
         array = Dir.glob("#{$config['path']}/**/*").sort
       end
       array.each_with_index{|x,i|
+        next unless File.exist?(x)
         next if File::ftype(x) == 'directory'
         flag = false
         $config['exclude_path'].each{|e| flag = true if x =~ /#{e.sub(/\//, '\/')}/ } if $config['exclude_path'].class.to_s == 'Array'

@@ -6,6 +6,7 @@ require 'sinatra/flash'
 require 'net/http'
 require 'sass'
 require 'haml'
+require 'builder'
 require 'fileutils'
 require 'coffee_script'
 require 'rack/csrf'
@@ -75,6 +76,12 @@ EOF
         @list = Pig.search params.merge(page: @page)
       end
       haml :index
+    end
+
+    get '/feed' do
+      @list = Pig.search params.merge(page: @page)
+      content_type :xml#'application/rss+xml'
+      builder :feed
     end
 
     get '/custom' do
@@ -191,7 +198,8 @@ EOF
 
     helpers do
       def config
-        CONFIG || Pit.get("Pig Media Server")
+        $config = Pit.get("Pig Media Server") unless $config
+        $config
       end
       def h str; CGI.escapeHTML str.to_s; end
       def partial(template, *args)

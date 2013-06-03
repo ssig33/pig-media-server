@@ -27,6 +27,16 @@
       -config['custom_list'].each do |k,v|
         %a{href: "/custom?name=#{CGI.escape k}"}=k
   -if @page 
+    -if params[:query] and params[:query].empty? == false
+      %p
+        %a{href: "/feed?query=#{CGI.escape params[:query]}&sort=#{params[:sort]}"} Feed
+        %a{href: "/?query=#{CGI.escape params[:query]}"} Sort By Date
+        %a{href: "/?query=#{CGI.escape params[:query]}&sort=name"} Sort By Name
+        - if params[:order] != 'ascending'
+          %a{href: "/?"+params.merge('order' => 'ascending').map{|k,v| URI.encode(k.to_s) + "=" + URI.encode(v.to_s) }.join('&')} Ascending
+        - if params[:order] != 'descending'
+          %a{href: "/?"+params.merge('order' => 'descending').map{|k,v| URI.encode(k.to_s) + "=" + URI.encode(v.to_s) }.join('&')} Descending
+
     %p.autopagerize_page_element
       -@list.each do |l|
         -next unless l.record

@@ -13,6 +13,7 @@ require 'redcarpet'
 require 'json'
 
 module PigMediaServer
+  CONFIG = Pit.get 'Pig Media Sever'
   class UserData
     def self.save json, user_id, path
       open("#{path}/#{user_id}.json", "w"){|f| f.puts json}
@@ -112,6 +113,11 @@ EOF
       image
     end
 
+    get "/change_aspect_rate/:key" do
+      Pig.find(params[:key]).change_aspect_rate(params[:rate])
+      redirect "/meta/#{params[:key]}"
+    end
+
     post '/gyazo' do
       url = PigMediaServer::Gyazo.post params[:url], params[:point]
       content_type :json
@@ -185,7 +191,7 @@ EOF
 
     helpers do
       def config
-        Pit.get "Pig Media Server"
+        CONFIG || Pit.get("Pig Media Server")
       end
       def h str; CGI.escapeHTML str.to_s; end
       def partial(template, *args)

@@ -52,6 +52,10 @@ str.chomp.chomp
     FileUtils.mkdir_p "#{self.config['user_data_path']}/kindle/queue"
     open("#{self.config['user_data_path']}/kindle/queue/#{self.key}_#{user_id}", 'w'){|x| x.puts ''}
   end
+  def change_aspect_rate rate
+    FileUtils.mkdir_p "#{self.config['user_data_path']}/rate"
+    open("#{self.config['user_data_path']}/rate/queue.txt", "a"){|x| x.puts "#{self.key} #{rate}"}
+  end
 
 
 

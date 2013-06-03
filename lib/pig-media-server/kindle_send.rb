@@ -6,10 +6,10 @@ require 'pig-media-server/model/pig'
 module PigMediaServer
   class KindleSend
     def run
+      pit_config = Pit.get 'Pig Media Server'
       while true
         begin
           GC.start
-          pit_config = Pit.get 'Pig Media Server'
           from_hash = Hash[*Dir.glob("#{pit_config['user_data_path']}/*.json").map{|t| JSON.parse open(t).read}.select{|t| t['kindle_to'] and t['kindle_from']}.map{|t| [t['kindle_to'], t['kindle_from']]}.select{|t| t.first != '' and t.last != ''}.flatten]
           Dir.glob("#{pit_config['user_data_path']}/kindle/queue/*").each{|x|
             begin

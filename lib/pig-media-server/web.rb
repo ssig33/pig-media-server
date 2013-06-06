@@ -103,6 +103,15 @@ EOF
     get('/meta/:key'){@p = Pig.find(params[:key]);haml :meta}
     get('/sub/:key'){@p = Pig.find(params[:key]);haml :sub}
     get('/webvtt/:key'){@p = Pig.find(params[:key]); content_type :text; @p.webvtt}
+    get '/delete/:key' do
+      p = Groonga['Files'][params[:key]]
+      path = "#{config['recycle_path']}/#{Date.today}/"
+      FileUtils.mkdir_p path unless File.exist? path
+      FileUtils.mv p.path, path rescue nil
+      Groonga['Files'].delete params[:key]
+      redirect params[:href]
+    end
+
 
     get '/read/:key' do
       if request.xhr?

@@ -40,6 +40,7 @@
     %p.autopagerize_page_element
       -@list.each do |l|
         -next unless l.record
+        -next unless l.record.path
         !=partial :_link, locals: {l: l}
     %p.pager
       -if params[:query] and params[:query].empty? == false

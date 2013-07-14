@@ -23,6 +23,7 @@
     %button Search
     %a{href: '/latest'} Latest
     %a{href: '/config'} Config
+    %a#only-new{href: 'javascript:void(0)'} Only New
     -if config['custom_list'].class == Hash
       -config['custom_list'].each do |k,v|
         %a{href: "/custom?name=#{CGI.escape k}"}=k

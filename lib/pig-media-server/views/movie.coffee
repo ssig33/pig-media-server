@@ -46,6 +46,7 @@ watch = (link)->
         recents['movie/'+key] = {time: parseInt((new Date)/1000), type: 'movie'}
         window.save_recents recents
         $('.new_flag').text('')
+        $('.main_span').attr('data-new': '')
         unless $('#action').text() == 'remote'
           setTimeout ->
             window.set_new()

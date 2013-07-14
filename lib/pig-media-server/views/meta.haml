@@ -13,8 +13,11 @@
     %input{name: 'query', value: params[:query]}
     %button Search
     %a{href: '/latest'} Latest
-    %a{href: '/?syobo=true'} Syobocal
     %a{href: '/config'} Config
+    -if config['custom_list'].class == Hash
+      -config['custom_list'].each do |k,v|
+        %a{href: "/custom?name=#{CGI.escape k}"}=k
+
   %h2 Metadata
   %h3=@p.name
   %h4 Path

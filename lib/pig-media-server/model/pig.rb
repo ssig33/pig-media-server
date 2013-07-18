@@ -62,7 +62,7 @@ str.chomp.chomp
   def self.find key
     case key.class.to_s
     when 'Array'
-      return key.map{|x| self.new Groonga['Files'][x]}
+      return key.map{|x| Groonga['Files'][x]}.select{|x| x}.map{|x| self.new x}
     when 'String'
       return self.new Groonga['Files'][key]
     end

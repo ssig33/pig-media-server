@@ -49,6 +49,7 @@
         %a{href: "/edit?query=#{CGI.escape params[:query]}"} Edit
       -elsif params[:sub]
         %a{href: "/?sub=true&page=#{@page+1}"} Next
+      -elsif @no_paging
       -else
         %a{href: "/latest?page=#{@page+1}"} Next
 

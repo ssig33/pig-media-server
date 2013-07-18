@@ -89,6 +89,7 @@ EOF
       @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
       @action = 'list'
       @list = Pig.find JSON.parse(open(c).read)
+      @no_paging = true
       haml :index
     end
 

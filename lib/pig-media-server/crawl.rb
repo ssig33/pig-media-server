@@ -18,7 +18,7 @@ module PigMediaServer
         $config['exclude_path'].each{|e| flag = true if x =~ /#{e.sub(/\//, '\/')}/ } if $config['exclude_path'].class.to_s == 'Array'
         next if flag
         Pig.find_or_create_by_path x
-        puts "Crawl #{i+1} / #{array.count}"
+        puts "Crawl #{i+1} / #{array.count}" if (i+1) % 100 == 0 or i+1 ==array.count
       }
     end
   end

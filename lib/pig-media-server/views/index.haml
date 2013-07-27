@@ -15,7 +15,7 @@
   -else
     Login as
     %span#user_id=session[:user_id]
-    %a{href: '/sessions'} Logout
+    %a{href: 'javascript:void(0)', onclick: 'logout()'} Logout
   %p=flash[:notice]
   %h1 Pig Media Server 
   %form{method: 'GET', action: '/'}

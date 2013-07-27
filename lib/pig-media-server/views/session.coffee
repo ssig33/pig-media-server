@@ -4,3 +4,8 @@ $ ->
   if localStorage.user_id != undefined and localStorage.user_id != ''
     if user_id == ''
       $.post('/sessions', user_id: localStorage.user_id).success(-> location.reload())
+
+window.logout = ->
+  console.log 'Logout'
+  delete localStorage.user_id
+  location.pathname = '/sessions'

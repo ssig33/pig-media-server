@@ -9,7 +9,6 @@ watch = (link)->
     $('#area').html('')
     $('#area').css 'min-height', 0
     width = $('body').width()
-    $('<div>').attr('class', 'space').appendTo('#area')
     $('<video>').attr(id: 'play', src: url, key: key, controls: 'controles').css('width', '98%').css('max-height', '98%').appendTo('#area')
     $('<br>').appendTo('#area')
     $('<a href="javascript:void(0)">Gyazo</a>').click(-> gyazo()).appendTo('#area')
@@ -71,6 +70,7 @@ movie_size = (origin_height)->
   setTimeout ->
     if $('#play').length > 0
       space_height = parseInt(($('#area').height() - $('#play').height())/4)
+      space_height = space_height *2
       if origin_height != space_height
         $('#area').css 'min-height', $(window).height()
         $('.space').css 'height', space_height if space_height != origin_height

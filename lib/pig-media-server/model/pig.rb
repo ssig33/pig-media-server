@@ -30,6 +30,8 @@ class Pig
       'txt'
     when 'mobi'
       'mobi'
+    when 'flv'
+      'flv'
     else
       'other'
     end

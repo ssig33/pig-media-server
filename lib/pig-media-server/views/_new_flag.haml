@@ -1,4 +1,4 @@
--if record.type == 'video'
+-if record.type == 'video' or record.type == 'flv'
   %span.new_flag{key: "movie/#{record.record._key}", style: 'color:lime; font-size:large'}
 -elsif record.type == 'read'
   =''

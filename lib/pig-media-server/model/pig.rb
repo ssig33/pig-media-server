@@ -26,6 +26,8 @@ class Pig
       'video'
     when 'zip', 'ZIP'
       'read'
+    when 'pdf'
+      'pdf'
     when 'txt', 'TXT'
       'txt'
     when 'mobi'

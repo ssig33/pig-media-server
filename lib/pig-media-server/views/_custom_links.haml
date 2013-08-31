@@ -1,0 +1,4 @@
+- if CONFIG['custom_links']
+  - CONFIG['custom_links'].each do |c|
+    -if c['type'].index(record.type)
+      %a{href: eval('"'+c['path']+'"')}=c['title']

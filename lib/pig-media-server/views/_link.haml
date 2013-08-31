@@ -11,7 +11,7 @@
     %a.sub.meta{href: "/sub/#{l.key}"} Sub
   -if l.type == 'txt' or l.type == 'read'
     %a.ao.meta{href: "/ao/#{l.key}"} Aozora
-  
+  !=partial :"_custom_links", locals: {record: l}
   %a.delete{href: 'javascript:void(0)', onclick: "var ok=confirm('Really?'); if (ok) location.href='/delete/#{l.key}?href=#{CGI.escape request.url}'; return false;"} Delete
   %br
 

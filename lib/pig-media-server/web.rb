@@ -65,6 +65,7 @@ EOF
       set :sessions, true
       set :haml, escape_html: true
       set :haml, attr_wrapper: '"'
+      set :logging, true
       use Rack::Session::Cookie, expire_after: 60*60*24*28, secret: $session_secret || rand(256**16).to_s(16)
     end
     
@@ -205,6 +206,25 @@ EOF
       "#{config['gyazo_prefix']}/#{name}"
     end
 
+    get '/star' do
+      j = UserData.load session[:user_id], config['user_data_path']
+      j['stars'] = [] unless j['stars']
+      if star? params[:key]
+        j['stars'].delete_if{|x| x == params[:key] }
+      else
+        j['stars'] << params[:key]
+      end
+      UserData.save j.to_json, session[:user_id], config['user_data_path']
+      redirect params[:href]
+    end
+
+    get '/stars' do
+      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
+      @action = 'list'
+      @list = Pig.find hash['stars']
+      haml :index
+    end
+
 
     helpers do
       def config
@@ -229,6 +249,10 @@ EOF
         else
           return {}
         end
+      end
+
+      def star? key
+        h = hash['stars'] and h.index key
       end
       
       def markdown str

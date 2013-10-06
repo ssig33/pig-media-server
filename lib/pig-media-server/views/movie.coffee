@@ -88,13 +88,20 @@ gyazo = ->
   url = c.toDataURL()
   $.post('/gyazo', {url: url, point: localStorage.gyazo}).success((data)->
     window.open(data.url, "", "width=500,height=400")
-    copyArea = $("<textarea/>")
-    copyArea.text(data.url)
-    $("body").append(copyArea)
-    copyArea.select()
-    document.execCommand("copy")
-    copyArea.remove()
   )
+
+tweet = ->
+  c = document.querySelector '#canvas'
+  v = document.querySelector '#play'
+  context = c.getContext '2d'
+  c.width = v.videoWidth
+  c.height = v.videoHeight
+  context.drawImage(v, 0, 0)
+  url = c.toDataURL()
+  $.post('/gyazo/tweet', {url: url}).success((data)->
+    true
+  )
+
 
 next_loop = ->
   setTimeout ->
@@ -133,6 +140,9 @@ key_func_k = ->
 key_func_g = ->
   gyazo() if $('video')[0]
 
+key_func_t = ->
+  tweet() if $('video')[0]
+
 key_func_p = ->
   pause() if $('video')[0]
 
@@ -148,6 +158,8 @@ $ ->
   remote()
   $(window).keyup (e)->
     switch e.keyCode
+      when 84
+        key_func_t()
       when 74
         key_func_j()
       when 75

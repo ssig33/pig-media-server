@@ -12,6 +12,8 @@ require 'coffee_script'
 require 'rack/csrf'
 require 'redcarpet'
 require 'json'
+require 'twitter'
+require 'tempfile'
 
 module PigMediaServer
   CONFIG = Pit.get 'Pig Media Sever'
@@ -27,6 +29,18 @@ module PigMediaServer
   end
 
   class Gyazo
+    def self.tweet url, key, secret, token, token_secret
+      p [key, secret, token, token_secret]
+      imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first
+      img = File.new Tempfile.open(['img', 'png']){|file| file.puts imagedata; file.path}
+      Twitter.configure do |config|
+        config.consumer_key = key
+        config.consumer_secret = secret
+        config.oauth_token = token
+        config.oauth_token_secret = token_secret
+      end 
+      Twitter.update_with_media("", img)# rescue nil
+    end
     def self.post url, point
       imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first
       boundary = '----BOUNDARYBOUNDARY----'
@@ -141,6 +155,12 @@ EOF
       content_type :json
       {url: url}.to_json
     end
+    post '/gyazo/tweet' do
+      c = hash()
+      PigMediaServer::Gyazo.tweet params[:url], c['consumer_key'], c['consumer_secret'], c['token'], c['token_secret']
+      true
+    end
+
 
     get '/remote' do
       if request.xhr? and params[:key]

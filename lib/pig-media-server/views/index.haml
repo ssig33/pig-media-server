@@ -29,6 +29,8 @@
     -if config['custom_list'].class == Hash
       -config['custom_list'].each do |k,v|
         %a{href: "/custom?name=#{CGI.escape k}"}=k
+    -if hash()['remote']
+      %a{href: 'javascript:void(0)', onclick: 'save_to_pig({remote_key: ""})'} Stop Remote
   -if @page 
     -if params[:query] and params[:query].empty? == false
       %p

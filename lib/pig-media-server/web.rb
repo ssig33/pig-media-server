@@ -29,9 +29,12 @@ module PigMediaServer
   end
 
   class Gyazo
-    def self.tweet url, key, secret, token, token_secret
+    def self.tweet r_key, time, key, secret, token, token_secret, c
       p [key, secret, token, token_secret]
-      imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first
+      record = Groonga['Files'][r_key]
+      name = "#{rand(256**16).to_s(16)}.jpg"
+      system "ffmpeg -ss #{time} -vframes 1 -i \"#{record.path}\" -f image2 #{c['gyazo_path']}/#{name}"
+      imagedata = open("#{c['gyazo_path']}/#{name}").read
       img = File.new Tempfile.open(['img', 'png']){|file| file.puts imagedata; file.path}
       Twitter.configure do |config|
         config.consumer_key = key
@@ -157,7 +160,7 @@ EOF
     end
     post '/gyazo/tweet' do
       c = hash()
-      PigMediaServer::Gyazo.tweet params[:url], c['consumer_key'], c['consumer_secret'], c['token'], c['token_secret']
+      PigMediaServer::Gyazo.tweet params[:key], params[:time], c['consumer_key'], c['consumer_secret'], c['token'], c['token_secret'], config()
       true
     end
 

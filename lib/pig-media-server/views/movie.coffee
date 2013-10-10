@@ -91,14 +91,8 @@ gyazo = ->
   )
 
 tweet = ->
-  c = document.querySelector '#canvas'
   v = document.querySelector '#play'
-  context = c.getContext '2d'
-  c.width = v.videoWidth
-  c.height = v.videoHeight
-  context.drawImage(v, 0, 0)
-  url = c.toDataURL()
-  $.post('/gyazo/tweet', {url: url}).success((data)->
+  $.post('/gyazo/tweet', {time: v.currentTime, key: $(v).attr('key')}).success((data)->
     true
   )
 

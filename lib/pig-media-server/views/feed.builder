@@ -3,7 +3,7 @@ xml.rss :version => "2.0" do
   xml.channel do
     xml.title "Pig Media Server -  feed - '#{h params[:query]}'"
     xml.description "pig feed"
-    xml.link "http://#{config['hostname']}/feed?query=#{CGI.escape params[:query]}"
+    xml.link "http://#{config['hostname']}/?query=#{CGI.escape params[:query]}"
 
     @list.each do |p|
       xml.item do

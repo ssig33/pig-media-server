@@ -3,3 +3,5 @@ require 'bundler/setup'
 Bundler.require
 require 'pig-media-server'
 require 'pig-media-server/cli'
+PigMediaServer::CLI.start
+

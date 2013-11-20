@@ -37,4 +37,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'coffee-script'
   gem.add_dependency 'sinatra-flash'
   gem.add_dependency 'twitter'
+  gem.add_dependency 'thor'
 end

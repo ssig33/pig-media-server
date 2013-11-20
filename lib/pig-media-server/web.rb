@@ -306,6 +306,13 @@ EOF
       rescue
         nil
       end  
+
+      def title
+        base = 'Pig Media Server'
+        return "#{params[:query]} - #{base}" if params[:query]
+        return "#{@p.name} - #{base}" if @p
+        base
+      end
     end
   end
 

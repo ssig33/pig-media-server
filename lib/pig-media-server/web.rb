@@ -36,13 +36,13 @@ module PigMediaServer
       system "ffmpeg -ss #{time} -vframes 1 -i \"#{record.path}\" -f image2 #{c['gyazo_path']}/#{name}"
       imagedata = open("#{c['gyazo_path']}/#{name}").read
       img = File.new Tempfile.open(['img', 'png']){|file| file.puts imagedata; file.path}
-      Twitter.configure do |config|
+      client = Twitter::REST::Client.new do |config|
         config.consumer_key = key
         config.consumer_secret = secret
         config.oauth_token = token
         config.oauth_token_secret = token_secret
       end 
-      Twitter.update_with_media("", img)# rescue nil
+      client.update_with_media("", img)# rescue nil
     end
     def self.post url, point
       imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first

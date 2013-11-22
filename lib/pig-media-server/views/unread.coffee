@@ -6,6 +6,16 @@ window.set_new = ->
       unless recents[key]
         $(this).text 'New!'
         $(this).parent().attr('data-new': true)
+        $(this).click ->
+          $node = $(this)
+          window.get_recents (recents)->
+            recents[$node.attr('key')] = {time: 0, type: 'movie'}
+            window.save_recents(recents)
+            setTimeout ->
+              $('.new_flag').text('')
+              $('.main_span').attr('data-new': '')
+              window.set_new()
+            , 1000
         count += 1
     if count == 0
       $('.main_link').css('margin-left', '0')

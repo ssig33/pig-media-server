@@ -18,7 +18,7 @@ module PigMediaServer
       FileUtils.mkdir_p config['user_data_path']
     end
 
-    desc ' crawl', 'run crawler'
+    desc 'crawl', 'run crawler'
     def crawl
       require 'pig-media-server/crawl'
       PigMediaServer::Crawl.new.all
@@ -44,6 +44,12 @@ module PigMediaServer
     def kindle_send
       require 'pig-media-server/kindle_send'
       PigMediaServer::KindleSend.new.run
+    end
+
+    desc 'backup', 'backup groonga\'s data'
+    def backup
+      require 'pig-media-server/backup'
+      PigMediaServer::Backup.new.backup
     end
   end
 end

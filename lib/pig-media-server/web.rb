@@ -304,7 +304,7 @@ EOF
             "%.#{precision}f TB"  % (number / 1099511627776)
         end.sub(/([0-9]\.\d*?)0+ /, '\1 ' ).sub(/\. /,' ').encode('UTF-8')
       rescue
-        nil
+        ""
       end  
 
       def title

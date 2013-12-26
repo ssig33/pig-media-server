@@ -5,7 +5,7 @@
   -if session[:user_id]
     %a.star{href: "/star?href=#{CGI.escape request.url}&key=#{l.key}", key: l.key} #{star?(l.key) ? 'Unstar' : 'Star'}
   %span.mtime=l.mtime.to_s.sub(/\ \+0900$/, '')
-  %span.size=number_to_human_size(l.size).encode('UTF-8', 'UTF-8')
+  %span.size=number_to_human_size(l.size).to_s.encode('UTF-8', 'UTF-8')
   %a.meta{href: "/meta/#{l.key}"} Meta
   -if l.srt
     %a.sub.meta{href: "/sub/#{l.key}"} Sub

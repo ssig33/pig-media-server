@@ -10,6 +10,7 @@ module PigMediaServer
         begin
           q = open("#{pit_config['user_data_path']}/rate/queue.txt").read.split("\n")
           q.each do |x|
+            begin
             next if x == ''
             key = x.split(' ').first
             rate = x.split(' ').last
@@ -17,6 +18,8 @@ module PigMediaServer
             if rate == '16:9'
               system 'MP4Box', '-add', "#{pig.record.path}:par=1:1", '-new', "#{pig.record.path}.MP4"
               FileUtils.mv "#{pig.record.path}.MP4", pig.record.path
+            end
+            rescue
             end
           end
           open("#{pit_config['user_data_path']}/rate/queue.txt", 'w'){|x| x.puts ''}

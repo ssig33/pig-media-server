@@ -79,14 +79,14 @@ EOF
     register Sinatra::Flash
     
     configure do
-      set :sessions, true
       set :haml, escape_html: true
       set :haml, attr_wrapper: '"'
       set :logging, true
-      use Rack::Session::Cookie, expire_after: 60*60*24*28, secret: $session_secret || rand(256**16).to_s(16)
+      use Rack::Session::Cookie, key: 'pigmeidaserver', secret: $session_secret || rand(256**16).to_s(16)
     end
     
     get '/' do
+      p session
       if params[:query]
         redirect '/latest' if params[:query].empty?
         @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
@@ -195,6 +195,7 @@ EOF
 
     post '/sessions' do
       session[:user_id] = params[:user_id]
+      p session
       redirect '/'
     end
 

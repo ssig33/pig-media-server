@@ -51,5 +51,12 @@ module PigMediaServer
       require 'pig-media-server/backup'
       PigMediaServer::Backup.new.backup
     end
+    
+    option :path, required: true
+    desc 'restore', 'restore groonga\'s data'
+    def restore
+      require 'pig-media-server/backup'
+      PigMediaServer::Backup.new.restore_from options[:path]
+    end
   end
 end

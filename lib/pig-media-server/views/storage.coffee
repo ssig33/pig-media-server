@@ -1,12 +1,7 @@
 window.get_recents = (func)->
   if $('#user_id').text() and $('#user_id').text() != ''
     dd = new Date()
-    $.get('/hash', stamp: dd.getTime()).success((data)->
-      if data['recents']
-        func data['recents']
-      else
-        func {}
-    )
+    $.get('/recents', stamp: dd.getTime()).success((data)-> func data)
   else
     try
       recents = JSON.parse window.localStorage['recents']
@@ -16,17 +11,11 @@ window.get_recents = (func)->
 
 window.save_recents = (recents)->
   if $('#user_id').text() and $('#user_id').text() != ''
-    $.get('/hash').success((data)->
-      data['recents'] = recents
-      $.post('/hash', json: JSON.stringify(data))
-    )
-    
+    $.post("/recents", data: JSON.stringify(recents))
   else
     window.localStorage['recents'] = JSON.stringify recents
 
-window.save_to_pig = (hash)->
-  $.get('/hash').success((data)->
-    data = $.extend data, hash
-    $.post('/hash', json: JSON.stringify(data)))
-window.get_from_pig = (key, func)-> $.get('/hash').success((data)-> func(data[key]))
+window.save_to_pig = (key, value)->
+  $.post('/data', key: key, value: value)
+window.get_from_pig = (key, func)-> $.get('/data', key: key).success((data)-> func(data))
 

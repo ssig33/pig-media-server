@@ -18,13 +18,12 @@ require 'tempfile'
 module PigMediaServer
   CONFIG = Pit.get 'Pig Media Sever'
   class UserData
-    def self.save json, user_id, path
-      open("#{path}/#{user_id}.json", "w"){|f| f.puts json}
-      true
+    def self.save user_id, key, value
+      AppData.set("user_data/#{user_id}/#{key}", value)
     end
 
-    def self.load user_id, path
-      return JSON.parse(open("#{path}/#{user_id}.json").read) rescue return {}
+    def self.load user_id, key
+      AppData.find("user_data/#{user_id}/#{key}")
     end
   end
 
@@ -33,7 +32,7 @@ module PigMediaServer
       p [key, secret, token, token_secret]
       record = Groonga['Files'][r_key]
       name = "#{rand(256**16).to_s(16)}.jpg"
-      system "ffmpeg -ss #{time} -vframes 1 -i \"#{record.path}\" -f image2 #{c['gyazo_path']}/#{name}"
+      system "avconv -ss #{time} -vframes 1 -i \"#{record.path}\" -f image2 #{c['gyazo_path']}/#{name}"
       imagedata = open("#{c['gyazo_path']}/#{name}").read
       img = File.new Tempfile.open(['img', 'png']){|file| file.puts imagedata; file.path}
       client = Twitter::REST::Client.new do |config|
@@ -159,8 +158,11 @@ EOF
       {url: url}.to_json
     end
     post '/gyazo/tweet' do
-      c = hash()
-      PigMediaServer::Gyazo.tweet params[:key], params[:time], c['consumer_key'], c['consumer_secret'], c['token'], c['token_secret'], config()
+      consumer_key = UserData.load session[:user_id], 'consumer_key'
+      consumer_secret = UserData.load session[:user_id], 'consumer_secret'
+      token = UserData.load session[:user_id], 'token'
+      token_secret = UserData.load session[:user_id], 'token_secret'
+      PigMediaServer::Gyazo.tweet params[:key], params[:time], consumer_key, consumer_secret, token, token_secret, config()
       true
     end
 
@@ -199,8 +201,14 @@ EOF
       redirect '/'
     end
 
-    get('/hash'){content_type :json; hash().to_json}
-    post('/hash'){PigMediaServer::UserData.save params[:json], session[:user_id], config['user_data_path']}
+    get('/data'){UserData.load(session[:user_id], params[:key])}
+    post('/data'){UserData.save(session[:user_id], params[:key], params[:value])}
+    get('/recents'){content_type :json; Recents.list(session[:user_id]).to_json}
+    post '/recents' do
+      JSON.parse(params[:data]).each{|k,v|
+        Recents.recent session[:user_id], k
+      }
+    end
 
     get('/config'){haml :config}
     get('/book2.js'){content_type :js;erb :book2}
@@ -231,21 +239,14 @@ EOF
     end
 
     get '/star' do
-      j = UserData.load session[:user_id], config['user_data_path']
-      j['stars'] = [] unless j['stars']
-      if star? params[:key]
-        j['stars'].delete_if{|x| x == params[:key] }
-      else
-        j['stars'] << params[:key]
-      end
-      UserData.save j.to_json, session[:user_id], config['user_data_path']
+      Stars.star(session[:user_id], params[:key])
       redirect params[:href]
     end
 
     get '/stars' do
       @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
       @action = 'list'
-      @list = Pig.find hash['stars']
+      @list = Stars.list session[:user_id]
       haml :index
     end
 
@@ -256,6 +257,9 @@ EOF
         $config
       end
       def h str; CGI.escapeHTML str.to_s; end
+      def remote?
+        UserData.load(session[:user_id], 'remote')
+      end
       def partial(template, *args)
         options = args.last.is_a?(Hash) ? args.pop : {}
         options.merge!(:layout => false)
@@ -267,16 +271,9 @@ EOF
           haml(template, options)
         end
       end 
-      def hash
-        if session[:user_id]
-          return PigMediaServer::UserData.load session[:user_id], config['user_data_path']
-        else
-          return {}
-        end
-      end
 
       def star? key
-        h = hash['stars'] and h.index key
+        Stars.star?(session[:user_id], key)
       end
       
       def markdown str

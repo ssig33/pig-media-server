@@ -1,15 +1,13 @@
 save = ->
   localStorage.gyazo = $('#gyazo').val()
   if $('#kindle_to').get(0)
-    save_to_pig({
-      kindle_to: $('#kindle_to').val(),
-      kindle_from: $('#kindle_from').val(),
-      token_secret: $('#token_secret').val(),
-      token: $('#token').val(),
-      consumer_secret: $('#consumer_secret').val(),
-      consumer_key: $('#consumer_key').val(),
-      remote: $('#remote').prop('checked')
-    })
+    save_to_pig('kindle_to', $('#kindle_to').val())
+    save_to_pig('kindle_from', $('#kindle_from').val())
+    save_to_pig('token_secret', $('#token_secret').val())
+    save_to_pig('token', $('#token').val())
+    save_to_pig('consumer_secret', $('#consumer_secret').val())
+    save_to_pig('consumer_key', $('#consumer_key').val())
+    save_to_pig('remote', $('#remote').prop('checked'))
 
 
 $ ->

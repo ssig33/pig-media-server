@@ -24,3 +24,29 @@ unless Groonga['Files']
     }
   end
 end
+
+unless Groonga['Datas']
+  puts "create table 'Datas'"
+  Groonga::Schema.define do |schema|
+    schema.create_table("Datas", type: :patricia_trie, key_type: 'ShortText'){|table| 
+      table.long_text "body"
+      table.long_text 'original_key'
+    }
+  end
+end
+
+unless Groonga['Stars']
+  puts "create table 'Stars'"
+  Groonga::Schema.define do |schema|
+    schema.create_table("Stars", type: :patricia_trie, key_type: 'ShortText'){|table| 
+    }
+  end
+end
+
+unless Groonga['Recents']
+  puts "create table 'Recents'"
+  Groonga::Schema.define do |schema|
+    schema.create_table("Recents", type: :patricia_trie, key_type: 'ShortText'){|table| 
+    }
+  end
+end

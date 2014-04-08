@@ -29,7 +29,7 @@
       %tr
         %th Use Remote?
         %td
-          -if hash()['remote']
+          -if remote?
             %input#remote{type: :checkbox}(checked)
           -else
             %input#remote{type: :checkbox}

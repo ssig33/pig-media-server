@@ -142,7 +142,7 @@ key_func_p = ->
 
 remote = ->
   $('a.remote').click ->
-    save_to_pig remote_key: $(this).attr('key')
+    save_to_pig 'remote_key', $(this).attr('key')
 
 
 $ ->

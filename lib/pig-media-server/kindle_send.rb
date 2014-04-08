@@ -2,26 +2,30 @@ require 'mail'
 require 'pony'
 require 'pig-media-server'
 require 'pig-media-server/model/pig'
+require 'pig-media-server/model/data'
 
 module PigMediaServer
   class KindleSend
     def run
       pit_config = Pit.get 'Pig Media Server'
       while true
-        begin
+        #begin
           GC.start
-          from_hash = Hash[*Dir.glob("#{pit_config['user_data_path']}/*.json").map{|t| JSON.parse open(t).read}.select{|t| t['kindle_to'] and t['kindle_from']}.map{|t| [t['kindle_to'], t['kindle_from']]}.select{|t| t.first != '' and t.last != ''}.flatten]
+          a = AppData.all.select{|x| x[:value].class == String and x[:key] =~ /kindle/ and x[:value] =~ /@/}.sort{|a2,b| a2[:key] <=> b[:key]}
+          froms = a.select{|x| x[:key] =~ /from/}
+          tos = a.select{|x| x[:key] =~ /to/}
+          from_data = {}
+          tos.count.times{|i|
+            from_data[tos[i][:value]] = froms[i][:value]
+          }
           Dir.glob("#{pit_config['user_data_path']}/kindle/queue/*").each{|x|
             begin
               queue = x.split('/').last
               key = queue.split('_').first
-              user_id = queue.split('_').last
-              config = JSON.parse open("#{pit_config['user_data_path']}/#{user_id}.json").read
-              p [key, user_id, config['kindle_to'], config['kindle_from']]
 
               pig = Pig.find key
-              puts 'start send' 
-              from_hash.each{|to, from|
+              puts 'start send: '  + pig.path
+              from_data.each{|to, from|
                 p [to, from]
                 Pony.mail({
                   :to => to,
@@ -37,14 +41,14 @@ module PigMediaServer
               p e
               p e.backtrace
             end
-            FileUtils.cd '/home/ssig33/dev/pig'
+            FileUtils.cd '/home/ssig33/server'
             FileUtils.rm x
             puts 'end '+x
           }
-        rescue => e
-          p e
-          p e.backtrace
-        end
+        #rescue => e
+        #  p e
+        #  p e.backtrace
+        #end
         sleep 1
       end
     end

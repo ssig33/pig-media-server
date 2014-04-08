@@ -29,7 +29,7 @@
     %p
       %video{src: @p.url, controls: :controls, style: 'max-width:50%;max-height:50%'}
     %p
-    -if hash()['remote']
+    -if remote?
       %a.remote{href: 'javascript:void(0)', key: @p.record.key} remote 
   -if @p.metadata
     %h4 Data

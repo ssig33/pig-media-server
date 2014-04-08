@@ -1,6 +1,7 @@
 #coding:utf-8
 require 'fileutils'
 require 'pig-media-server/model/migrate'
+require 'pig-media-server/model/data'
 
 CONFIG = Pit.get('Pig Media Server')
 

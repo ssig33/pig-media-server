@@ -61,7 +61,11 @@ class Stars
 
   def self.star user, key
     key =user+'/'+key
-    Groonga['Stars'].add key
+    if Groonga['Stars'].add key
+      Groonga['Stars'].delete key
+    else
+      Groonga['Stars'].add key
+    end
   end
 
   def self.unstar user, key

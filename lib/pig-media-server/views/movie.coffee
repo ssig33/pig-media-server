@@ -91,11 +91,29 @@ gyazo = ->
   )
 
 tweet = ->
+  c = document.querySelector '#canvas'
   v = document.querySelector '#play'
-  $.post('/gyazo/tweet', {time: v.currentTime, key: $(v).attr('key')}).success((data)->
+  context = c.getContext '2d'
+  c.width = v.videoWidth
+  c.height = v.videoHeight
+  context.drawImage(v, 0, 0)
+  url = c.toDataURL()
+  $.post('/gyazo/tweet', {url: url}).success((data)->
     true
   )
 
+tweet_with_comment = ->
+  c = document.querySelector '#canvas'
+  v = document.querySelector '#play'
+  context = c.getContext '2d'
+  c.width = v.videoWidth
+  c.height = v.videoHeight
+  context.drawImage(v, 0, 0)
+  url = c.toDataURL()
+  comment = prompt 'Tweet'
+  $.post('/gyazo/tweet', {url: url, comment: comment}).success((data)->
+    true
+  )
 
 next_loop = ->
   setTimeout ->
@@ -125,20 +143,12 @@ pause = ->
   else
     node.pause()
 
-key_func_j = ->
-  seek (15) if $('video')[0]
-
-key_func_k = ->
-  seek (-15) if $('video')[0]
-
-key_func_g = ->
-  gyazo() if $('video')[0]
-
-key_func_t = ->
-  tweet() if $('video')[0]
-
-key_func_p = ->
-  pause() if $('video')[0]
+key_func_j = -> seek (15) if $('video')[0]
+key_func_k = -> seek (-15) if $('video')[0]
+key_func_g = -> gyazo() if $('video')[0]
+key_func_t = -> tweet() if $('video')[0]
+key_func_c = -> tweet_with_comment() if $('video')[0]
+key_func_p = -> pause() if $('video')[0]
 
 remote = ->
   $('a.remote').click ->
@@ -152,6 +162,8 @@ $ ->
   remote()
   $(window).keyup (e)->
     switch e.keyCode
+      when 67
+        key_func_c()
       when 84
         key_func_t()
       when 74

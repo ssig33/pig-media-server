@@ -26,16 +26,19 @@ module PigMediaServer
               pig = Pig.find key
               puts 'start send: '  + pig.path
               from_data.each{|to, from|
-                p [to, from]
-                Pony.mail({
-                  :to => to,
-                  from: from,
-                  subject: '',
-                  body: '',
-                  attachments: {"#{key}.mobi" => File.read(pig.record.path)},
-                  :via => :smtp,
-                  :via_options => pit_config['smtp'].dup
-                })
+                begin
+                  p [to, from]
+                  Pony.mail({
+                    :to => to,
+                    from: from,
+                    subject: '',
+                    body: '',
+                    attachments: {"#{key}.mobi" => File.read(pig.record.path)},
+                    :via => :smtp,
+                    :via_options => pit_config['smtp'].dup
+                  })
+                rescue
+                end
               }
             rescue =>e
               p e

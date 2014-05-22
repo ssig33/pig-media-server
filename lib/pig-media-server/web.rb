@@ -28,20 +28,22 @@ module PigMediaServer
   end
 
   class Gyazo
-    def self.tweet r_key, time, key, secret, token, token_secret, c
-      p [key, secret, token, token_secret]
-      record = Groonga['Files'][r_key]
-      name = "#{rand(256**16).to_s(16)}.jpg"
-      system "avconv -ss #{time} -vframes 1 -i \"#{record.path}\" -f image2 #{c['gyazo_path']}/#{name}"
-      imagedata = open("#{c['gyazo_path']}/#{name}").read
-      img = File.new Tempfile.open(['img', 'png']){|file| file.puts imagedata; file.path}
+    def self.tweet url, comment, key, secret, token, token_secret, c
+      $config = $config ||Pit.get("Pig Media Server")
+      name = $config['gyazo_path'] + "/#{rand(256**16).to_s(16)}.png"
+      jpg = name.sub(/png$/, 'jpg')
+      img = url.sub(/data:image\/png;base64,/, '').unpack('m').first
+      open(name, 'w'){|f| f.puts img}
+      system "gm", "convert", name, jpg
       client = Twitter::REST::Client.new do |config|
         config.consumer_key = key
         config.consumer_secret = secret
-        config.oauth_token = token
-        config.oauth_token_secret = token_secret
+        config.access_token = token
+        config.access_token_secret = token_secret
       end 
-      client.update_with_media("", img)# rescue nil
+      client.update_with_media(comment.to_s, open(jpg))# rescue nil
+      FileUtils.rm name
+      FileUtils.rm jpg
     end
     def self.post url, point
       imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first
@@ -162,7 +164,7 @@ EOF
       consumer_secret = UserData.load session[:user_id], 'consumer_secret'
       token = UserData.load session[:user_id], 'token'
       token_secret = UserData.load session[:user_id], 'token_secret'
-      PigMediaServer::Gyazo.tweet params[:key], params[:time], consumer_key, consumer_secret, token, token_secret, config()
+      PigMediaServer::Gyazo.tweet params[:url], params[:comment], consumer_key, consumer_secret, token, token_secret, config()
       true
     end
 

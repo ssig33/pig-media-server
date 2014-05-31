@@ -1,6 +1,7 @@
 -if record.srt
-  %a.watch{href: 'javascript:void(0)', srt: 'true', url: record.url, key: record.key, title: record.name}watch
+  %a.watch{href: 'javascript:void(0)', srt: 'true', url: record.url, key: record.key, title: record.name} Watch
 -else
-  %a.watch{href: 'javascript:void(0)', url: record.url, key: record.key, title: record.name}watch
+  %a.watch{href: 'javascript:void(0)', url: record.url, key: record.key, title: record.name} Watch
 -if remote?
-  %a.remote{href: 'javascript:void(0)', key: record.key} remote
+  %a.remote{href: 'javascript:void(0)', key: record.key} Remote
+%a.remote.chromecast{href: 'javascript:void(0)', onclick: "chrome_cast('#{record.url}', '#{record.key}')", style: 'display:none'} Chromecast

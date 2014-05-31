@@ -1,8 +1,9 @@
 !!!
 %title= title
 %meta(content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport')
+%script(type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js")
 %script{src: 'http://code.jquery.com/jquery.min.js'}
--%w{flv storage session movie unread book book2 swipe}.each do |js|
+-%w{flv storage session movie unread book book2 swipe chromecast}.each do |js|
   %script{src: "/#{js}.js"}
 
 %link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}

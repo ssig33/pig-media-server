@@ -4,4 +4,8 @@
   %a.watch{href: 'javascript:void(0)', url: record.url, key: record.key, title: record.name} Watch
 -if remote?
   %a.remote{href: 'javascript:void(0)', key: record.key} Remote
-%a.remote.chromecast{href: 'javascript:void(0)', onclick: "chrome_cast('#{record.url}', '#{record.key}')", style: 'display:none'} Chromecast
+-if request.env['HTTP_X_REAL_IP'].to_s =~ /192.168/
+  - url = record.url.sub(/pig.ssig33.com/, '192.168.1.53')
+  %a.remote.chromecast{href: 'javascript:void(0)', onclick: "chrome_cast('#{url}', '#{record.key}')", style: 'display:none'} Chromecast
+-else
+  %a.remote.chromecast{href: 'javascript:void(0)', onclick: "chrome_cast('#{record.url}', '#{record.key}')", style: 'display:none'} Chromecast

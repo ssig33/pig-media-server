@@ -236,7 +236,8 @@ EOF
     post '/api/capapi' do
       record = Groonga['Files'][params[:key]]
       name = "#{rand(256**16).to_s(16)}.jpg"
-      system "avconv -ss #{params[:time]} -vframes 1 -i \"#{record.path}\" -f image2 #{config['gyazo_path']}/#{name}"
+      system "avconv -ss #{params[:time]} -vframes 1 -i \"#{record.path}\" -f image2 -s 1280x720 #{config['gyazo_path']}/#{name}"
+      #system "gm convert -resize 1280x720! #{config['gyazo_path']}/#{name} #{config['gyazo_path']}/#{name}"
       "#{config['gyazo_prefix']}/#{name}"
     end
 

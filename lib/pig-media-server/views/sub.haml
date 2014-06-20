@@ -3,7 +3,6 @@
 %title Pig Media Server
 %link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
 %script{src: 'http://code.jquery.com/jquery.min.js'}
-
 %script{src: '/sub.js'}
 %script{src: '/subview.js'}
 %meta{content: 'width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no', name: 'viewport'}
@@ -27,6 +26,6 @@
     %a{href: "/nosub/#{params[:key]}"} Edit
 .none
   %span#key=params[:key]
-  %span#url="/data/#{@p.path}"
+  %span#url=@p.url
   %span#path
-  %canvas
+  %canvas#canvas

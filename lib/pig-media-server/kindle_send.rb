@@ -8,7 +8,7 @@ module PigMediaServer
   class KindleSend
     def run
       pit_config = Pit.get 'Pig Media Server'
-      while true
+      100.times do 
         #begin
           GC.start
           a = AppData.all.select{|x| x[:value].class == String and x[:key] =~ /kindle/ and x[:value] =~ /@/}.sort{|a2,b| a2[:key] <=> b[:key]}
@@ -52,7 +52,7 @@ module PigMediaServer
         #  p e
         #  p e.backtrace
         #end
-        sleep 1
+        sleep 10
       end
     end
   end

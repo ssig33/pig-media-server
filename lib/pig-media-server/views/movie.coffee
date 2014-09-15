@@ -9,7 +9,7 @@ watch = (link)->
     $('#area').html('')
     $('#area').css 'min-height', 0
     width = $('body').width()
-    $('<video>').attr(id: 'play', src: url, key: key, controls: 'controles').css('width', '98%').css('max-height', '98%').appendTo('#area')
+    $('<video>').click(-> pause()).attr(id: 'play', src: url, key: key, controls: 'controles').css('width', '98%').css('max-height', '98%').appendTo('#area')
     $('<br>').appendTo('#area')
     $('<a href="javascript:void(0)">Gyazo</a>').click(-> gyazo()).appendTo('#area')
     $('<span>&nbsp;&nbsp;&nbsp;</span>').appendTo('#area')
@@ -105,6 +105,43 @@ pause = ->
     node.play()
   else
     node.pause()
+window.gyazo = ->
+  c = document.querySelector '#canvas'
+  v = document.querySelector 'video'
+  context = c.getContext '2d'
+  c.width = v.videoWidth
+  c.height = v.videoHeight
+  context.drawImage(v, 0, 0)
+  url = c.toDataURL()
+  $.post('/gyazo', {url: url, point: localStorage.gyazo}).success((data)->
+    window.open(data.url, "", "width=500,height=400")
+  )
+
+window.tweet = ->
+  c = document.querySelector '#canvas'
+  v = document.querySelector 'video'
+  context = c.getContext '2d'
+  c.width = v.videoWidth
+  c.height = v.videoHeight
+  context.drawImage(v, 0, 0)
+  url = c.toDataURL()
+  $.post('/gyazo/tweet', {url: url}).success((data)->
+    true
+  )
+
+window.tweet_with_comment = ->
+  c = document.querySelector '#canvas'
+  v = document.querySelector 'video'
+  context = c.getContext '2d'
+  c.width = v.videoWidth
+  c.height = v.videoHeight
+  context.drawImage(v, 0, 0)
+  url = c.toDataURL()
+  comment = prompt 'Tweet'
+  $.post('/gyazo/tweet', {url: url, comment: comment}).success((data)->
+    true
+  )
+
 
 key_func_j = -> seek (15) if $('video')[0]
 key_func_k = -> seek (-15) if $('video')[0]

@@ -11,12 +11,12 @@ module PigMediaServer
       else
         array = Dir.glob("#{$config['path']}/**/*").sort
       end
-      array.each_with_index{|x,i|
+      array.each.with_index(1){|x,i|
         next unless File.exist?(x)
         next if File::ftype(x) == 'directory'
         next if $config['exclude_path'].class == Array && $config['exclude_path'].find{|e| x =~ /#{e.sub(/\//, '\/')}/ }
         Pig.find_or_create_by_path x
-        puts "Crawl #{i+1} / #{array.count}" if (i+1) % 100 == 0 or i+1 ==array.count
+        puts "Crawl #{i} / #{array.count}" if i % 100 == 0 or i ==array.count
       }
     end
   end

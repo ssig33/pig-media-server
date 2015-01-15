@@ -23,7 +23,7 @@ class Pig
   def url; 'http://'+self.config['hostname']+ '/volume' + URI.encode(self.record.path.sub(/#{config['path'].sub(/\//, '\/')}/, ''));end
   def type
     case self.name.split('.').last
-    when 'mp4', 'MP4', 'webm'
+    when 'mp4', 'MP4', 'webm', 'm4v'
       'video'
     when 'zip', 'ZIP'
       'read'

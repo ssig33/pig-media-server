@@ -12,6 +12,7 @@ xml.rss :version => "2.0" do
         xml.description p.name
         xml.pubDate p.mtime.rfc822
         xml.guid p.url
+        xml.key p.key
         xml.enclosure url: p.url, title: 'Podcast'
       end
     end

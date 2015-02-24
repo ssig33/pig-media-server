@@ -35,6 +35,8 @@ TV = ->
 
     for n in $('.main_span')
       $(n).remove() if n.dataset.new == undefined
+
+    $('a.watch').first().click()
   @create_link = (ary)=>
     $span = $('<span>')
     $span.addClass('main_span')
@@ -82,6 +84,7 @@ TV = ->
         )
       )
       $('ul').append $li
+    @cast()
 
   @start = =>
     @get()

@@ -1,4 +1,4 @@
-watch = (link)->
+window.watch = (link)->
   $link = $(link)
   key = $(link).attr 'key'
   url = $("##{key} .main_link").attr('href')

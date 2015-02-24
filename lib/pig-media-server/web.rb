@@ -203,6 +203,20 @@ EOF
       redirect '/'
     end
 
+    get '/tv' do
+      @action = 'list'
+      haml :tv
+    end
+
+    get '/tv/list' do
+      content_type :json
+      UserData.load(session[:user_id], 'tv-list').to_json
+    end
+
+    post '/tv/list' do
+      UserData.save(session[:user_id], 'tv-list', JSON.parse(params[:data]))
+    end
+
     get('/data'){UserData.load(session[:user_id], params[:key])}
     post('/data'){UserData.save(session[:user_id], params[:key], params[:value])}
     get('/recents'){content_type :json; Recents.list(session[:user_id]).to_json}

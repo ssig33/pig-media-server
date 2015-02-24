@@ -1,0 +1,33 @@
+!!!
+%title= title
+%meta(content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport')
+%script{src: 'http://code.jquery.com/jquery.min.js'}
+-%w{flv storage session movie unread book book2 swipe tv}.each do |js|
+  %script{src: "/#{js}.js"}
+%link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
+:css
+  .none{display:none}
+#area=''
+#all
+  -unless session[:user_id]
+    %a{href: '/sessions'} Login
+  -else
+    Login as
+    %span#user_id=session[:user_id]
+    %a{href: 'javascript:void(0)', onclick: 'logout()'} Logout
+  %p=flash[:notice]
+  %h1
+    %a{href: '/'} Pig Media Server 
+  %h2 
+    %a#start{href: 'javascript:void(0)'} Cast 開始
+  %h3 お気に入りの番組(クエリ)を登録してください
+  %input
+  %button 追加
+  %ul
+    %li=''
+  %h3 再生リスト
+  %p#list=''
+.none
+  %span#action=@action
+  %span#tv=true
+  %canvas#canvas

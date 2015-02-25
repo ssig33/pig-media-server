@@ -101,7 +101,7 @@ next = ->
     key = $(v).attr 'key'
     keys = $.map($('.watch'), (n,i)-> $(n).attr('key'))
     index = keys.indexOf key
-    if $('#tv').tex() == 'true'
+    if $('#tv').text() == 'true'
       next = keys[index+1]
     else
       next = keys[index-1]

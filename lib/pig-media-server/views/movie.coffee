@@ -95,7 +95,7 @@ next_loop = ->
     next_loop()
   ,200
 
-next = ->
+next_movie = ->
   if $('video')[0]
     v = document.querySelector 'video'
     key = $(v).attr 'key'
@@ -162,7 +162,7 @@ key_func_g = -> gyazo() if $('video')[0]
 key_func_t = -> tweet() if $('video')[0]
 key_func_c = -> tweet_with_comment() if $('video')[0]
 key_func_p = -> pause() if $('video')[0]
-key_func_n = -> next()
+key_func_n = -> next_movie()
 
 remote = ->
   $('a.remote').click ->

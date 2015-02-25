@@ -95,6 +95,19 @@ next_loop = ->
     next_loop()
   ,200
 
+next = ->
+  if $('video')[0]
+    v = document.querySelector 'video'
+    key = $(v).attr 'key'
+    keys = $.map($('.watch'), (n,i)-> $(n).attr('key'))
+    index = keys.indexOf key
+    if $('#tv').tex() == 'true'
+      next = keys[index+1]
+    else
+      next = keys[index-1]
+    if next
+      $('.watch[key="'+next+'"]').click()
+
 seek = (count)->
   node = document.querySelector '#play'
   node.currentTime = node.currentTime + count
@@ -149,6 +162,7 @@ key_func_g = -> gyazo() if $('video')[0]
 key_func_t = -> tweet() if $('video')[0]
 key_func_c = -> tweet_with_comment() if $('video')[0]
 key_func_p = -> pause() if $('video')[0]
+key_func_n = -> next()
 
 remote = ->
   $('a.remote').click ->
@@ -174,5 +188,7 @@ $ ->
         key_func_p()
       when 71
         key_func_g()
+      when 78
+        key_func_n()
 
 # vim: set ft=coffee:

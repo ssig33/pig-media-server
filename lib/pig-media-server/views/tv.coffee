@@ -1,6 +1,7 @@
 TV = ->
   @data = []
   @list = []
+  @initial = true
   @get = =>
     $.getJSON('/tv/list').done((data)=>
       @data = data
@@ -14,6 +15,7 @@ TV = ->
     $.post('/tv/list', data: JSON.stringify(@data)).success(=> @render())
 
   @cast = =>
+    @initial = false
     @list = []
     $.ajaxSetup({ async: false })
     for d in @data
@@ -61,7 +63,7 @@ TV = ->
   @bind = =>
     $('#start').click => @cast()
     $('button').click =>
-      t = $('input').val()
+      t = $('input#title').val()
       unless t == ''
         @data.push t
         @save()
@@ -84,7 +86,7 @@ TV = ->
         )
       )
       $('ul').append $li
-    @cast()
+    @cast() if @initial
 
   @start = =>
     @get()

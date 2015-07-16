@@ -83,15 +83,7 @@ next_loop = ->
     if $('video')[0]
       v = document.querySelector 'video'
       if v.currentTime== v.duration
-        key = $(v).attr 'key'
-        keys = $.map($('.watch'), (n,i)-> $(n).attr('key'))
-        index = keys.indexOf key
-        next = keys[index-1]
-        if next
-          $('.watch[key="'+next+'"]').click()
-        else
-          next = keys[keys.length-1]
-          $('.watch[key="'+next+'"]').click()
+        next_movie()
     next_loop()
   ,200
 

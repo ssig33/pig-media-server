@@ -7,7 +7,7 @@
 %link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
 <meta content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport' />
 #all
-  %h1 pig.ssig33.com
+  %h1 #{config['page_title']}
   %p=flash[:notice]
   %form{method: 'GET', action: '/'}
     %input{name: 'query', value: params[:query]}

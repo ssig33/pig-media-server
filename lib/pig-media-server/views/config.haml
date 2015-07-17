@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 %meta{charset: 'UTF-8'}
-%title Config - Pig Media Server
+%title Config - #{config['page_title']}
 %script{src: 'https://code.jquery.com/jquery.min.js'}
 %script{src: '/config.js'}
 %script{src: '/storage.js'}
@@ -13,7 +13,7 @@
     Login as
     %span#user_id=session[:user_id]
     %a{href: '/sessions'} Logout
-  %h1 Pig Media Server
+  %h1 #{config['page_title']}
   %form{method: 'GET', action: '/'}
     %input{name: 'query', value: params[:query]}
     %button Search

@@ -17,7 +17,7 @@
     %a{href: 'javascript:void(0)', onclick: 'logout()'} Logout
   %p=flash[:notice]
   %h1
-    %a{href: '/'} Pig Media Server 
+    %a{href: '/'} #{config['page_title']}
   %h2 
     %a#start{href: 'javascript:void(0)'} Cast 開始
   %h3 お気に入りの番組(クエリ)を登録してください

@@ -1,7 +1,7 @@
 xml.instruct! :xml, :version => '1.0'
 xml.rss :version => "2.0" do
   xml.channel do
-    xml.title "Pig Media Server -  feed - '#{h params[:query]}'"
+    xml.title "#{config['page_title']} -  feed - '#{h params[:query]}'"
     xml.description "pig feed"
     xml.link "http://#{config['hostname']}/?query=#{CGI.escape params[:query]}"
 

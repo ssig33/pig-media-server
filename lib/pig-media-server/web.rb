@@ -323,7 +323,7 @@ EOF
       end  
 
       def title
-        base = 'Pig Media Server'
+        base = $config['page_title']
         return "#{params[:query]} - #{base}" if params[:query]
         return "#{@p.name} - #{base}" if @p
         base

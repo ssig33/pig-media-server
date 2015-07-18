@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 %meta{charset: 'UTF-8'}
-%title Pig Media Server
+%title #{config['page_title']}
 %link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
 %script{src: 'https://code.jquery.com/jquery.min.js'}
 %script{src: '/sub.js'}
 %script{src: '/subview.js'}
 %meta{content: 'width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no', name: 'viewport'}
 #all
-  %h1 pig.ssig33.com
+  %h1 #{config['page_title']}
   %form{method: 'GET', action: '/'}
     %input{name: 'query', value: params[:query]}
     %button Search

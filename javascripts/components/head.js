@@ -34,7 +34,8 @@ class SearchBox extends React.Component {
   submit(event){
     event.preventDefault();
     var query = this.refs.input.getDOMNode().value;
-    history.pushState('', '', `/?query=${encodeURIComponent(query)}`);
+    var url = `/?query=${encodeURIComponent(query)}`
+    history.pushState(url, '', url);
     this.props.state.initialize();
   }
   render(){

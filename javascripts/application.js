@@ -34,6 +34,8 @@ class Application extends React.Component {
 
       models: {video: this.video, recent: this.recent}
     }
+
+    window.addEventListener('popstate',(ev)=>{ this.initialize(); },false);
   }
   update_state(){ this.setState(this.state); }
 
@@ -83,5 +85,5 @@ class Application extends React.Component {
 
 React.render(<Application />, document.querySelector("#application"));
 
-window.addEventListener('popstate',function(ev){ location.reload(); },false);
+
 

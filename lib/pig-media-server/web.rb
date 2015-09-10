@@ -108,11 +108,6 @@ EOF
     end
 
     get '/latest' do
-      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
-      size = params[:size] ? params[:size].to_i : 50
-      @list = Groonga['Files'].select.paginate([key: 'mtime', order: 'descending'], size: size, page: @page).map{|x| Pig.new(x)}
-      @action = 'list'
-      haml :index
       haml :react
     end
 
@@ -215,11 +210,12 @@ EOF
 
     get('/data'){UserData.load(session[:user_id], params[:key])}
     post('/data'){UserData.save(session[:user_id], params[:key], params[:value])}
-    get('/recents'){content_type :json; Recents.list(session[:user_id]).to_json}
+    get('/recents'){content_type :json; p session[:user_id];Recents.list(session[:user_id]).to_json}
     post '/recents' do
       JSON.parse(params[:data]).each{|k,v|
         Recents.recent session[:user_id], k
       }
+      'true'
     end
 
     get('/config'){haml :config}

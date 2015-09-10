@@ -23,7 +23,7 @@ gulp.task('build', function(){
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('./public'))
+    .pipe(gulp.dest('./lib/pig-media-server/views/'))
 
 });
 

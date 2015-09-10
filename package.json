@@ -3,6 +3,7 @@
   "description": "music",
   "dependencies": {
     "react": "^0.13.3",
+    "moment": "",
     "jquery": ""
   },
   "devDependencies": {

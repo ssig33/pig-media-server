@@ -30,4 +30,21 @@ class Head extends React.Component {
   }
 }
 
+class SearchBox extends React.Component {
+  submit(event){
+    event.preventDefault();
+    var query = this.refs.input.getDOMNode().value;
+    history.pushState('', '', `/?query=${encodeURIComponent(query)}`);
+    this.props.state.initialize();
+  }
+  render(){
+    return <form onSubmit={(e)=> this.submit(e)}>
+      <input ref='input'/><button>Search</button>
+      <a href='/latest'>Latest</a>
+      <a href='/config'>Config</a>
+    </form>
+  }
+}
+
 window.Head = Head;
+window.SearchBox = SearchBox;

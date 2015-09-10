@@ -62,7 +62,10 @@ str.chomp.chomp
     open("#{self.config['user_data_path']}/rate/queue.txt", "a"){|x| x.puts "#{self.key} #{rate}"}
   end
 
-
+  def to_hash(opts = {})
+    hash = {key: self.key, name: self.name, mtime: self.mtime, size: self.size, url: self.url, type: self.type}
+    hash
+  end
 
   def self.find key
     case key.class.to_s

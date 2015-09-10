@@ -1,4 +1,5 @@
 require 'pig-media-server'
+require 'pig-media-server/api'
 require 'pig-media-server/model/pig'
 require 'pig-media-server/model/comic'
 require 'sinatra/base'
@@ -78,6 +79,7 @@ EOF
 
   class Web < Sinatra::Base
     register Sinatra::Flash
+    include PigMediaServer::API
     
     configure do
       set :haml, escape_html: true
@@ -87,14 +89,7 @@ EOF
     end
     
     get '/' do
-      p session
-      if params[:query]
-        redirect '/latest' if params[:query].empty?
-        @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
-        @action = 'list'
-        @list = Pig.search params.merge(page: @page)
-      end
-      haml :index
+      haml :react
     end
 
     get '/feed' do
@@ -118,6 +113,7 @@ EOF
       @list = Groonga['Files'].select.paginate([key: 'mtime', order: 'descending'], size: size, page: @page).map{|x| Pig.new(x)}
       @action = 'list'
       haml :index
+      haml :react
     end
 
     get('/meta/:key'){@p = Pig.find(params[:key]);haml :meta}
@@ -230,7 +226,7 @@ EOF
     get('/book2.js'){content_type :js;erb :book2}
     get('/swipe.js'){content_type :js;erb :swipe}
     get('/*.css'){scss params[:splat].first.to_sym}
-    get('/*.js'){coffee params[:splat].first.to_sym}
+    get('/bundle.js'){content_type :js; open(File::dirname(__FILE__)+"/views/bundle.js").read}
 
     post '/api/save' do
       key = Digest::MD5.hexdigest(params[:name]).to_s
@@ -271,6 +267,7 @@ EOF
     helpers do
       def config
         $config = Pit.get("Pig Media Server") unless $config
+        $config['page_title'] = 'Pig Media Server' unless $config['page_title']
         $config
       end
       def h str; CGI.escapeHTML str.to_s; end

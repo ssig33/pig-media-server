@@ -1,0 +1,22 @@
+!!!
+%title Pig Media Server
+%meta(content='width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport')
+%script(src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js")
+%link{href: '/app.css', rel: 'stylesheet', type: 'text/css'}
+%script{src: 'https://code.jquery.com/jquery.min.js'}
+
+%span.none#user_id=session[:user_id]
+
+#application
+
+:javascript
+  var user_id = document.querySelector('#user_id').textContent
+  if(user_id == ''){
+    if(localStorage.user_id != undefined && localStorage.user_id != ''){
+      $.post('/sessions', {user_id: localStorage.user_id}).done(function(){location.reload()});
+    }
+  } else {
+    if(user_id != ''){ localStorage.user_id = user_id }
+  }
+
+%script(src="/bundle.js")

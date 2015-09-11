@@ -17,3 +17,4 @@ test/version_tmp
 tmp
 config.yaml
 vendor/bundle
+node_modules

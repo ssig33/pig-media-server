@@ -1,10 +1,6 @@
 %span.main_span{id: l.key}
   !=partial :"_new_flag", locals: {record: l}
-  -if request.env['HTTP_X_REAL_IP'].to_s =~ /192.168/ and request.user_agent =~ /Android/
-    -url = l.url.sub(/pig.ssig33.com/, '192.168.1.53')
-    %a.main_link{key: l.key, href: url}=h(l.name)
-  -else
-    %a.main_link{key: l.key, href: l.url}=h(l.name)
+  %a.main_link{key: l.key, href: l.url}=h(l.name)
   !=partial :"_ft_#{l.type}", locals: {record: l}
   -if session[:user_id]
     %a.star{href: "/star?href=#{CGI.escape request.url}&key=#{l.key}", key: l.key} #{star?(l.key) ? 'Unstar' : 'Star'}

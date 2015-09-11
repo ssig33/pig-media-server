@@ -1,0 +1,21 @@
+{
+  "main": "javascript/main.js",
+  "description": "music",
+  "dependencies": {
+    "react": "^0.13.3",
+    "moment": "",
+    "jquery": ""
+  },
+  "devDependencies": {
+    "browser-sync": "",
+    "browserify": "",
+    "babelify": "",
+    "gulp-webserver": "",
+    "gulp": "3.9.0",
+    "gulp-babel": "",
+    "vinyl-source-stream": "",
+    "vinyl-buffer": "",
+    "babel": "",
+    "gulp-uglify": ""
+  }
+}

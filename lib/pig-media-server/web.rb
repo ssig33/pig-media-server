@@ -1,4 +1,5 @@
 require 'pig-media-server'
+require 'pig-media-server/api'
 require 'pig-media-server/model/pig'
 require 'pig-media-server/model/comic'
 require 'sinatra/base'
@@ -78,6 +79,7 @@ EOF
 
   class Web < Sinatra::Base
     register Sinatra::Flash
+    include PigMediaServer::API
     
     configure do
       set :haml, escape_html: true
@@ -87,14 +89,7 @@ EOF
     end
     
     get '/' do
-      p session
-      if params[:query]
-        redirect '/latest' if params[:query].empty?
-        @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
-        @action = 'list'
-        @list = Pig.search params.merge(page: @page)
-      end
-      haml :index
+      haml :react
     end
 
     get '/feed' do
@@ -104,20 +99,11 @@ EOF
     end
 
     get '/custom' do
-      c = config['custom_list'][params[:name]]
-      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
-      @action = 'list'
-      @list = Pig.find JSON.parse(open(c).read)
-      @no_paging = true
-      haml :index
+      haml :react
     end
 
     get '/latest' do
-      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
-      size = params[:size] ? params[:size].to_i : 50
-      @list = Groonga['Files'].select.paginate([key: 'mtime', order: 'descending'], size: size, page: @page).map{|x| Pig.new(x)}
-      @action = 'list'
-      haml :index
+      haml :react
     end
 
     get('/meta/:key'){@p = Pig.find(params[:key]);haml :meta}
@@ -219,19 +205,21 @@ EOF
 
     get('/data'){UserData.load(session[:user_id], params[:key])}
     post('/data'){UserData.save(session[:user_id], params[:key], params[:value])}
-    get('/recents'){content_type :json; Recents.list(session[:user_id]).to_json}
+    get('/recents'){content_type :json; p session[:user_id];Recents.list(session[:user_id]).to_json}
     post '/recents' do
       JSON.parse(params[:data]).each{|k,v|
         Recents.recent session[:user_id], k
       }
+      'true'
     end
 
     get('/config'){haml :config}
     get('/book2.js'){content_type :js;erb :book2}
     get('/swipe.js'){content_type :js;erb :swipe}
     get('/*.css'){scss params[:splat].first.to_sym}
+    get('/bundle.js'){content_type :js; open(File::dirname(__FILE__)+"/views/bundle.js").read}
     get('/*.js'){coffee params[:splat].first.to_sym}
-
+    
     post '/api/save' do
       key = Digest::MD5.hexdigest(params[:name]).to_s
       FileUtils.mkdir_p "#{config['user_data_path']}/api_data"
@@ -271,6 +259,7 @@ EOF
     helpers do
       def config
         $config = Pit.get("Pig Media Server") unless $config
+        $config['page_title'] = 'Pig Media Server' unless $config['page_title']
         $config
       end
       def h str; CGI.escapeHTML str.to_s; end

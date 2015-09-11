@@ -1,0 +1,63 @@
+class LoginAs extends React.Component {
+  render(){
+    return <span>Login as {this.props.user_id}</span>
+  }
+}
+
+class LoginLink extends React.Component {
+  render(){
+    return <a href='/sessions'>Login</a>
+  }
+}
+
+class Session extends React.Component {
+  render(){
+    return <div>
+      {this.props.state.session.user_id ? 
+        <LoginAs user_id={this.props.state.session.user_id} /> :
+        <LoginLink />
+      }
+    </div>
+  }
+}
+
+class Head extends React.Component {
+  render(){
+    return <div>
+      <Session state={this.props.state} />
+      <h1>{this.props.state.config.page_title}</h1>
+    </div>
+  }
+}
+
+class CustomList extends React.Component{
+  click(){
+    this.props.state.open(`/custom?name=${encodeURIComponent(this.props.name)}`)
+  }
+  render(){
+    return <a href='javascript:void(0)' onClick={()=> this.click()}>{this.props.name}</a>
+  }
+}
+
+class SearchBox extends React.Component {
+  submit(event){
+    event.preventDefault();
+    var query = this.refs.input.getDOMNode().value;
+    var url = `/?query=${encodeURIComponent(query)}`
+    history.pushState(url, '', url);
+    this.props.state.initialize();
+  }
+  click(e){ this.props.state.open(e.target.dataset.url); }
+  render(){
+    var custom_list = $.map(this.props.state.models.custom_list.list, (v,k)=>{return <CustomList key={k} name={k} state={this.props.state}/>});
+    return <form onSubmit={(e)=> this.submit(e)}>
+      <input ref='input'/><button>Search</button>
+      <a href='javascript:void(0)' onClick={(e)=>this.click(e)} data-url='/latest'>Latest</a>
+      <a href='/config'>Config</a>
+      {custom_list}
+    </form>
+  }
+}
+
+window.Head = Head;
+window.SearchBox = SearchBox;

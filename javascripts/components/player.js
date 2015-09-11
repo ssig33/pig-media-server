@@ -90,11 +90,11 @@ class Player extends React.Component {
       window.open(data.url, "", "width=500,height=400");
     });
   }
-  tweet(){ $.post('/gyazo/tweet', {url: this.capture}).success((data)=>{return true}); }
+  tweet(){ $.post('/gyazo/tweet', {url: this.capture()}).success((data)=>{return true}); }
   comment_tweet(){
-    comment = prompt('tweet');
+    var comment = prompt('tweet');
     if(!!comment){
-      $.post('/gyazo/tweet', {url: this.capture, comment: comment}).success((data)=>{return true});
+      $.post('/gyazo/tweet', {url: this.capture(), comment: comment}).success((data)=>{return true});
     }
   }
 

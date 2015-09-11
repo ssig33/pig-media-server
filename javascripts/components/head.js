@@ -30,6 +30,15 @@ class Head extends React.Component {
   }
 }
 
+class CustomList extends React.Component{
+  click(){
+    this.props.state.open(`/custom?name=${encodeURIComponent(this.props.name)}`)
+  }
+  render(){
+    return <a href='javascript:void(0)' onClick={()=> this.click()}>{this.props.name}</a>
+  }
+}
+
 class SearchBox extends React.Component {
   submit(event){
     event.preventDefault();
@@ -38,11 +47,14 @@ class SearchBox extends React.Component {
     history.pushState(url, '', url);
     this.props.state.initialize();
   }
+  click(e){ this.props.state.open(e.target.dataset.url); }
   render(){
+    var custom_list = $.map(this.props.state.models.custom_list.list, (v,k)=>{return <CustomList key={k} name={k} state={this.props.state}/>});
     return <form onSubmit={(e)=> this.submit(e)}>
       <input ref='input'/><button>Search</button>
-      <a href='/latest'>Latest</a>
+      <a href='javascript:void(0)' onClick={(e)=>this.click(e)} data-url='/latest'>Latest</a>
       <a href='/config'>Config</a>
+      {custom_list}
     </form>
   }
 }

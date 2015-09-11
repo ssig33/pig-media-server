@@ -16,7 +16,10 @@ class Controller {
         result.page = "list";
         result.api_url = '/api/r/latest';
         break;
-
+      case "/custom":
+        result.page = "list";
+        result.api_url = `/api/r/custom?name=${this.params().name}`;
+        break;
     }
     return result;
   }

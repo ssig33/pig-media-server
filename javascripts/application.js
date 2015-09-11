@@ -7,6 +7,7 @@ require('./controller.js');
 
 require('./recent.js');
 require('./video.js');
+require('./custom_list.js');
 
 require('./components/head.js');
 require('./components/list.js');
@@ -21,6 +22,7 @@ class Application extends React.Component {
     this.controller = new Controller();
     this.recent = new Recent(this);
     this.video = new Video(this);
+    this.custom_list = new CustomList(this);
 
     this.state = {
       config: {},
@@ -30,13 +32,20 @@ class Application extends React.Component {
       video: null,
 
       set_video: (item)=>{this.video.set(item)},
+      open: (link)=>{this.open(link)},
       initialize: ()=>{this.initialize()},
 
-      models: {video: this.video, recent: this.recent}
+      models: {video: this.video, recent: this.recent, custom_list: this.custom_list}
     }
 
     window.addEventListener('popstate',(ev)=>{ this.initialize(); },false);
   }
+
+  open(link){
+    history.pushState('', '', link);
+    this.initialize();
+  }
+
   update_state(){ this.setState(this.state); }
 
   load_from_api(url){ if(!!url){ $.get(url).done((data)=>{ this.state.items = data; this.update_state(); }); } }
@@ -66,6 +75,7 @@ class Application extends React.Component {
   initialize(){
     this.load_config();
     this.load_session();
+    this.custom_list.load();
     this.routing()
   }
   
@@ -73,8 +83,8 @@ class Application extends React.Component {
 
   render(){
     return <div>
+      <Player state={this.state} />
       <div id='all'>
-        <Player state={this.state} />
         <Head state={this.state} />
         <SearchBox state={this.state}/>
         <List state={this.state}/>

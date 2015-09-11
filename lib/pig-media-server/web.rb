@@ -99,12 +99,7 @@ EOF
     end
 
     get '/custom' do
-      c = config['custom_list'][params[:name]]
-      @page = params[:page].to_i < 1 ? 1 : params[:page].to_i
-      @action = 'list'
-      @list = Pig.find JSON.parse(open(c).read)
-      @no_paging = true
-      haml :index
+      haml :react
     end
 
     get '/latest' do
@@ -223,7 +218,8 @@ EOF
     get('/swipe.js'){content_type :js;erb :swipe}
     get('/*.css'){scss params[:splat].first.to_sym}
     get('/bundle.js'){content_type :js; open(File::dirname(__FILE__)+"/views/bundle.js").read}
-
+    get('/*.js'){coffee params[:splat].first.to_sym}
+    
     post '/api/save' do
       key = Digest::MD5.hexdigest(params[:name]).to_s
       FileUtils.mkdir_p "#{config['user_data_path']}/api_data"

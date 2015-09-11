@@ -40,6 +40,15 @@ module PigMediaServer
         content_type :json
         session.to_hash.to_json
       end
+
+      get '/api/r/custom_list' do
+        content_type :json
+        if config['custom_list']
+          config['custom_list'].to_json
+        else
+          {}.to_json
+        end
+      end
     end
   end
 end

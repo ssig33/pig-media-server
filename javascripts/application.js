@@ -2,6 +2,8 @@ window.React = require('react');
 window.$ = window.jQuery = require('jquery');
 window.moment = require('moment');
 
+require('./chromecast.js');
+
 require('./utils.js');
 require('./controller.js');
 
@@ -15,7 +17,6 @@ require('./components/list.js');
 require('./components/new_flag.js');
 require('./components/watch.js');
 require('./components/player.js');
-
 
 class Application extends React.Component {
   constructor(props){

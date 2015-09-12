@@ -22,6 +22,10 @@ class Item extends React.Component {
         item={this.props.item}
         state={this.props.state}
       />
+      <ChromeCast
+        item={this.props.item}
+        state={this.props.state}
+      />
       <span className='mtime'>{this.mtime()}</span>&nbsp;
       <span className='size'>{size_pretty(item.size)}</span>&nbsp;
       <a className='meta' href={meta}>Meta</a>

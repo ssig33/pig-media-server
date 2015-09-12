@@ -10,6 +10,7 @@ class Controller {
           if(!!this.params().sort){ result.api_url += `&sort=${this.params().sort}` }
           if(!!this.params().order){ result.api_url += `&order=${this.params().order}` }
           if(!!this.params().page){ result.api_url += `&page=${this.params().page}` }
+          $('title').text(decodeURIComponent(this.query()));
         } else {
           result.api_url = null;
         }
@@ -18,10 +19,12 @@ class Controller {
       case "/latest":
         result.page = "list";
         result.api_url = '/api/r/latest';
+        $('title').text("Latest - Pig Media Server");
         break;
       case "/custom":
         result.page = "list";
         result.api_url = `/api/r/custom?name=${this.params().name}`;
+        $('title').text(decodeURIComponent(this.params().name));
         break;
     }
     return result;

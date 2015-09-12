@@ -48,12 +48,25 @@ class SearchBox extends React.Component {
     this.props.state.initialize();
   }
   click(e){ this.props.state.open(e.target.dataset.url); }
+
+  full_screen(){
+    var elem = document.querySelector("body");
+    if (elem.requestFullScreen) {
+      elem.requestFullScreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullScreen) {
+      elem.webkitRequestFullScreen();
+}
+  }
+
   render(){
     var custom_list = $.map(this.props.state.models.custom_list.list, (v,k)=>{return <CustomList key={k} name={k} state={this.props.state}/>});
     return <form onSubmit={(e)=> this.submit(e)}>
       <input ref='input'/><button>Search</button>
       <a href='javascript:void(0)' onClick={(e)=>this.click(e)} data-url='/latest'>Latest</a>
       <a href='/config'>Config</a>
+      <a href='javascript:void(0)' onClick={()=> this.full_screen()}>Full Screen</a>
       {custom_list}
     </form>
   }

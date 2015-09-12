@@ -147,6 +147,7 @@ class Player extends React.Component {
         ref='video'
         src={this.video_url()} 
         controls='controls'
+        onClick={()=> this.pause()}   
       />
       <canvas className='none' ref='canvas' />
       <div style={{height: '300px'}}/>

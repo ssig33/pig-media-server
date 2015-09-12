@@ -28,13 +28,16 @@ class Application extends React.Component {
     this.state = {
       config: {},
       session: {},
-      items: {}, 
+      items: [], 
       recent: {},
       video: null,
 
       set_video: (item)=>{this.video.set(item)},
       open: (link)=>{this.open(link)},
       initialize: ()=>{this.initialize()},
+      update_state: ()=>{this.update_state()},
+
+      controller: this.controller,
 
       models: {video: this.video, recent: this.recent, custom_list: this.custom_list}
     }

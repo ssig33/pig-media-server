@@ -9,6 +9,7 @@ class Controller {
           result.api_url = `/api/r/search?query=${query}`
           if(!!this.params().sort){ result.api_url += `&sort=${this.params().sort}` }
           if(!!this.params().order){ result.api_url += `&order=${this.params().order}` }
+          if(!!this.params().page){ result.api_url += `&page=${this.params().page}` }
         } else {
           result.api_url = null;
         }
@@ -26,6 +27,8 @@ class Controller {
     return result;
   }
 
+  
+
   params(){
     var arg  = new Object;
     var pair = location.search.substring(1).split('&');
@@ -37,6 +40,14 @@ class Controller {
   }
 
   query(){ return this.params().query; }
+
+  can_sort_and_paging(){
+    if(location.pathname == '/'){
+      return !!this.query();
+    } else {
+      return false;
+    }
+  }
 }
 
 window.Controller = Controller;

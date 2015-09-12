@@ -17,7 +17,7 @@ module PigMediaServer
     included do
       get '/api/r/latest' do
         content_type :json
-        list_to_json(Groonga['Files'].select.paginate([key: 'mtime', order: 'descending'], size: size, page: @page).map{|x| Pig.new(x)})
+        list_to_json(Groonga['Files'].select.paginate([key: 'mtime', order: 'descending'], size: size, page: page).map{|x| Pig.new(x)})
       end
 
       get '/api/r/custom' do

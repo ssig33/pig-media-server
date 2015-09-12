@@ -20,15 +20,51 @@ class Item extends React.Component {
   }
 }
 
+class Pager extends React.Component {
+  constructor(props){
+    super(props);
+    this.page = 1;
+    var page = this.props.state.controller.params().page;
+    if(page){ this.page = parseInt(page)}
+    this.bind();
+  }
+
+  bind(){
+    $(window).on("scroll",()=>{
+      var scrollHeight = $(document).height();
+      var scrollPosition = $(window).height() + $(window).scrollTop();
+      if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+        if(this.props.state.controller.can_sort_and_paging()|| location.pathname == '/latest'){
+          this.click();
+        }
+      }
+    });
+  }
+  click(){
+    this.page ++;
+    if(location.pathname == '/latest'){
+      var url = this.props.state.controller.route().api_url += `?page=${this.page}`;
+    } else {
+      var url = this.props.state.controller.route().api_url += `&page=${this.page}`;
+    }
+    $.get(url).done((data)=>{
+      this.props.state.items = this.props.state.items.concat(data);
+      this.props.state.update_state();
+      if(location.pathname == '/latest'){
+        var new_url = `/latest?page=${this.page}`;
+      } else {
+        var new_url = `/?query=${this.props.state.controller.query()}&page=${this.page}`;
+      }
+      history.pushState('', '', new_url);
+    });
+  }
+
+  render(){ return <a href='javascript:void(0)' onClick={()=> this.click()}>Next</a> }
+}
+
 
 class List extends React.Component {
-  can_sort(){
-    if(this.props.state.items.length > 0){
-      return true;
-    } else {
-      return false;
-    }
-  }
+  can_sort(){ return this.props.state.controller.can_sort_and_paging()} 
   render(){
 
     var items = $.map(this.props.state.items, (item)=>{
@@ -42,9 +78,7 @@ class List extends React.Component {
     return <div>
       {this.can_sort() ?  <Sort state={this.props.state} /> : null }
       <p>{items}</p>
-      <p>
-        Pager
-      </p>
+      <p>{this.can_sort() || location.pathname == '/latest' ?  <Pager state={this.props.state} /> : null }</p>
     </div>
   }
 }

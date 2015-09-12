@@ -14,6 +14,8 @@ module PigMediaServer
       list.map{|x| 
         hash = x.to_hash
         hash['custom_links'] = partial :_custom_links, locals: {record: x}
+        hash['metadata'] = !!x.metadata and x.metadata != ''
+        hash['srt'] = !!x.metadata and x.metadata != ''
         hash
       }.to_json
     end

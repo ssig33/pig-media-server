@@ -9,6 +9,8 @@ class Item extends React.Component {
 
   render(){
     var item = this.props.item;
+    var meta = `/meta/${this.props.item.key}`;
+    var sub = `/sub/${this.props.item.key}`;
     return <span className='main_span'>
       <NewFlag 
         item={this.props.item}
@@ -22,6 +24,8 @@ class Item extends React.Component {
       />
       <span className='mtime'>{this.mtime()}</span>&nbsp;
       <span className='size'>{size_pretty(item.size)}</span>&nbsp;
+      <a className='meta' href={meta}>Meta</a>
+      <a className='meta' href={sub}>Sub</a>
       <CustomLinks item={this.props.item} />
     </span>
   }

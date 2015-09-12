@@ -41,6 +41,7 @@ window.chrome_cast = (mediaURL, key)=>{
   if(mediaURL.match(/pig.ssig33.com/)){
     mediaURL = mediaURL.replace(/pig.ssig33.com\/volume/, 'ashare.ssig33.com');
     mediaURL = mediaURL.replace(/https/, 'http');
+    mediaURL = mediaURL.replace(/^\/\//, 'http://');
     console.log(mediaURL);
   }
   var mediaInfo = new chrome.cast.media.MediaInfo(mediaURL)

@@ -1,3 +1,9 @@
+class CustomLinks extends React.Component{
+  render(){
+    return <span dangerouslySetInnerHTML={{__html: this.props.item.custom_links}}/>
+  }
+}
+
 class Item extends React.Component {
   mtime(){ return moment(new Date(this.props.item.mtime)).format('YYYY/MM/DD hh:mm:ss'); }
 
@@ -15,7 +21,8 @@ class Item extends React.Component {
         state={this.props.state}
       />
       <span className='mtime'>{this.mtime()}</span>&nbsp;
-      <span className='size'>{size_pretty(item.size)}</span>
+      <span className='size'>{size_pretty(item.size)}</span>&nbsp;
+      <CustomLinks item={this.props.item} />
     </span>
   }
 }

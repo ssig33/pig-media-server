@@ -11,7 +11,11 @@ module PigMediaServer
     end
 
     def list_to_json list
-      list.map{|x| x.to_hash}.to_json
+      list.map{|x| 
+        hash = x.to_hash
+        hash['custom_links'] = partial :_custom_links, locals: {record: x}
+        hash
+      }.to_json
     end
 
     included do

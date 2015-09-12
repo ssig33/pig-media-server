@@ -108,28 +108,30 @@ class Player extends React.Component {
   bind(){
     $(window).keyup((e)=>{
       if(!!$(this.dom()).attr('src')){
-        switch(e.keyCode){
-          case 74:
-            this.seek(15);
-            break;
-          case 75:
-            this.seek(-15);
-            break;
-          case 80:
-            this.pause();
-            break;
-          case 71:
-            this.gyazo();
-            break;
-          case 78:
-            this.next();
-            break;
-          case 67:
-            this.comment_tweet();
-            break;
-          case 84:
-            this.tweet();
-            break;
+        if(document.activeElement.tagName != 'INPUT'){
+          switch(e.keyCode){
+            case 74:
+              this.seek(15);
+              break;
+            case 75:
+              this.seek(-15);
+              break;
+            case 80:
+              this.pause();
+              break;
+            case 71:
+              this.gyazo();
+              break;
+            case 78:
+              this.next();
+              break;
+            case 67:
+              this.comment_tweet();
+              break;
+            case 84:
+              this.tweet();
+              break;
+          }
         }
       }
     });

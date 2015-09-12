@@ -25,19 +25,25 @@ class Player extends React.Component {
     }
   }
 
+  next(){
+    var next = false;
+    var result;
+    var index = $.map(this.props.state.items, (e,i)=>{return e.key}).indexOf(this.props.state.video.key);
+    this.props.state.video = this.props.state.items[index-1];
+    this.props.state.update_state();
+
+  }
+
   play(prev){
     if(this.to_play(this.video_url())){
-      console.log("LOAD");
       var node = this.dom();
       node.addEventListener('canplay', (e)=>{ 
         var target = e.target;
         target.play(); 
         this.props.state.models.recent.use(`movie/${this.props.state.video.key}`);
-        target.addEventListener('ended', (e)=>{
-          var src = $(target).attr("src");
-          if(src && src != ''){ this.next(); }
-        });
+        
       });
+      node.addEventListener('ended', (e)=>{ this.next(); });
       node.load();
     }
   }

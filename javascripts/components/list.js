@@ -22,7 +22,15 @@ class Item extends React.Component {
 
 
 class List extends React.Component {
+  can_sort(){
+    if(this.props.state.items.length > 0){
+      return true;
+    } else {
+      return false;
+    }
+  }
   render(){
+
     var items = $.map(this.props.state.items, (item)=>{
       return <Item
         key={item.key}
@@ -32,6 +40,7 @@ class List extends React.Component {
     });
 
     return <div>
+      {this.can_sort() ?  <Sort state={this.props.state} /> : null }
       <p>{items}</p>
       <p>
         Pager

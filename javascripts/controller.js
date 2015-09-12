@@ -7,6 +7,8 @@ class Controller {
         result.page = "list";
         if(!!query){
           result.api_url = `/api/r/search?query=${query}`
+          if(!!this.params().sort){ result.api_url += `&sort=${this.params().sort}` }
+          if(!!this.params().order){ result.api_url += `&order=${this.params().order}` }
         } else {
           result.api_url = null;
         }
@@ -33,6 +35,8 @@ class Controller {
     }
     return arg;
   }
+
+  query(){ return this.params().query; }
 }
 
 window.Controller = Controller;

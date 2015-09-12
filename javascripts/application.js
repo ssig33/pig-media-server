@@ -10,6 +10,7 @@ require('./video.js');
 require('./custom_list.js');
 
 require('./components/head.js');
+require('./components/sort.js');
 require('./components/list.js');
 require('./components/new_flag.js');
 require('./components/watch.js');

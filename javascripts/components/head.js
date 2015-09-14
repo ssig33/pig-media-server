@@ -57,13 +57,25 @@ class SearchBox extends React.Component {
       elem.mozRequestFullScreen();
     } else if (elem.webkitRequestFullScreen) {
       elem.webkitRequestFullScreen();
-}
+    }
   }
 
+  componentDidUpdate(){
+    var query = decodeURIComponent(this.props.state.controller.query());
+    if(query == 'undefined' || query == 'null' || !query){query = ''}
+    this.refs.input.getDOMNode().value = query;
+  }
+
+
+
+  change(){ }
+
   render(){
+    var query = decodeURIComponent(this.props.state.controller.query());
+    if(query == 'undefined' || query == 'null' || !query){query = ''}
     var custom_list = $.map(this.props.state.models.custom_list.list, (v,k)=>{return <CustomList key={k} name={k} state={this.props.state}/>});
     return <form onSubmit={(e)=> this.submit(e)}>
-      <input ref='input'/><button>Search</button>
+      <input ref='input' defaultValue={query} onChange={()=>{this.change()}}/><button>Search</button>
       <a href='javascript:void(0)' onClick={(e)=>this.click(e)} data-url='/latest'>Latest</a>
       <a href='/config'>Config</a>
       <a href='javascript:void(0)' onClick={()=> this.full_screen()}>Full Screen</a>

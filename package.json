@@ -4,6 +4,7 @@
   "dependencies": {
     "react": "^0.13.3",
     "moment": "",
+    "moment-timezone": "",
     "jquery": ""
   },
   "devDependencies": {

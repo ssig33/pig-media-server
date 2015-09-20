@@ -17,6 +17,7 @@ class Pig
   def key; self.record._key;end
   def name; self.record.path.split('/').last; end
   def mtime; Time.at(self.record.mtime);end
+  def mtime_to_i; self.record.mtime; end
   def size; self.record.size;end
   def metadata; self.record.metadata;end
   def srt; self.record.srt;end
@@ -63,7 +64,7 @@ str.chomp.chomp
   end
 
   def to_hash(opts = {})
-    hash = {key: self.key, name: self.name, mtime: self.mtime, size: self.size, url: self.url, type: self.type}
+    hash = {key: self.key, name: self.name, mtime: self.mtime, size: self.size, url: self.url, type: self.type, mtime_to_i: self.mtime_to_i}
     hash
   end
 

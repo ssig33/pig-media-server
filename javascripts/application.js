@@ -1,6 +1,6 @@
 window.React = require('react');
 window.$ = window.jQuery = require('jquery');
-window.moment = require('moment');
+window.moment = require('moment-timezone');
 
 require('./chromecast.js');
 

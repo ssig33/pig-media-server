@@ -139,6 +139,13 @@ class Player extends React.Component {
 
   componentDidMount(){ this.size_loop(); this.bind(); }
   componentDidUpdate(prev, prevState){ this.play(prev); }
+  video_name(){
+    if(!!this.video_url()){
+      return this.props.state.video.name;
+    } else {
+      return null;
+    }
+  }
   
   class_name(){ if(!!this.video_url()){ return "" } else { return "none" } }
 
@@ -154,6 +161,8 @@ class Player extends React.Component {
       <canvas className='none' ref='canvas' />
       <div style={{height: '300px'}}/>
       <a href='javascript:void(0)' onClick={()=> this.close()}>Close Video</a>
+      <br />
+      <span>{this.video_name()}</span>
     </div>
   }
 }

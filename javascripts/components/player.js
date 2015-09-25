@@ -111,7 +111,7 @@ class Player extends React.Component {
         if(document.activeElement.tagName != 'INPUT'){
           switch(e.keyCode){
             case 74:
-              this.seek(15);
+              this.seek(14);
               break;
             case 75:
               this.seek(-15);

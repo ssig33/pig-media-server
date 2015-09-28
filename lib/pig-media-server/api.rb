@@ -55,6 +55,31 @@ module PigMediaServer
           {}.to_json
         end
       end
+
+      get '/api/r/query_list' do
+        content_type :json
+        Groonga['QueryList'].select.map{|x| x.query }.sort.to_json
+      end
+
+      post '/api/r/query_list' do
+        content_type :json
+        key = Digest::MD5.hexdigest(params[:query])
+        unless Groonga['QueryList'][key]
+          Groonga['QueryList'].add(key)
+          Groonga['QueryList'][key].query = params[:query]
+        end
+        {result: true}.to_json
+      end
+
+      post '/api/r/delete_query_list' do
+        content_type :json
+        key = Digest::MD5.hexdigest(params[:query])
+        if Groonga['QueryList'][key]
+          Groonga['QueryList'].delete key
+        end
+        {result: true}.to_json
+
+      end
     end
   end
 end

@@ -1,3 +1,20 @@
+class QuerySave extends React.Component{
+  constructor(props){
+    super(props);
+    this.controller = new Controller();
+  }
+  
+  click(){
+    var query = decodeURIComponent(this.controller.query());
+    $.post("/api/r/query_list", {query: query})
+  }
+  render(){
+    return <span>
+      <a href='javascript:void(0)' onClick={()=> this.click()}>Save Query</a>
+    </span>
+  }
+}
+
 class Sort extends React.Component{
   constructor(props){
     super(props);
@@ -39,6 +56,7 @@ class Sort extends React.Component{
         </span>
         : null
       }
+      <QuerySave />
     </p>
   }
 }

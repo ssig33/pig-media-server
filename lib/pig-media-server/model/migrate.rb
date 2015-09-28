@@ -50,3 +50,11 @@ unless Groonga['Recents']
     }
   end
 end
+
+unless Groonga['QueryList']
+  puts "create table 'QueryList'"
+  Groonga::Schema.define do |schema|
+    schema.create_table("QueryList", type: :patricia_trie, key_type: 'ShortText'){|table| table.short_text "query" }
+  end
+
+end

@@ -14,6 +14,7 @@ require('./custom_list.js');
 require('./components/head.js');
 require('./components/sort.js');
 require('./components/list.js');
+require('./components/query_list.js');
 require('./components/new_flag.js');
 require('./components/watch.js');
 require('./components/player.js');
@@ -53,7 +54,14 @@ class Application extends React.Component {
 
   update_state(){ this.setState(this.state); }
 
-  load_from_api(url){ if(!!url){ $.get(url).done((data)=>{ this.state.items = data; this.update_state(); }); } }
+  load_from_api(url){ 
+    if(!!url){ 
+      $.get(url).done((data)=>{ this.state.items = data; this.update_state(); }); 
+    } else {
+      this.state.items = [];
+      this.update_state();
+    }
+  }
 
   load_config(){ $.get("/api/r/config").done((data)=>{ this.state.config = data; this.update_state(); })}
   load_session(){ 
@@ -93,6 +101,7 @@ class Application extends React.Component {
         <Head state={this.state} />
         <SearchBox state={this.state}/>
         <List state={this.state}/>
+        <QueryList state={this.state}/>
       </div>
     </div>
   }

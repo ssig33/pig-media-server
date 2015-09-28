@@ -22,10 +22,17 @@ class Session extends React.Component {
 }
 
 class Head extends React.Component {
+  click(){
+    this.props.state.open('/'); 
+  }
   render(){
     return <div>
       <Session state={this.props.state} />
-      <h1>{this.props.state.config.page_title}</h1>
+      <h2>
+        <a href='javascript:void(0)' onClick={()=> this.click()}>
+          {this.props.state.config.page_title}
+        </a>
+      </h2>
     </div>
   }
 }

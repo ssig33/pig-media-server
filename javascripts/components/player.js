@@ -3,12 +3,14 @@ class Player extends React.Component {
     super(props);
     this.current_url = '';
   }
-  close(){ this.props.state.set_video(null); }
-  dom(){ return this.refs.video.getDOMNode(); }
+  close(){ this.props.state.models.video.set(null); }
+  dom(){ return this.refs.video; }
+
+  video(){ return this.props.state.models.video.item; }
 
   video_url(){
     var url = null;
-    if(!!this.props.state.video){ url = this.props.state.video.url; }
+    if(!!this.video()){ url = this.video().url; }
     return url;
   }
 
@@ -28,10 +30,8 @@ class Player extends React.Component {
   next(){
     var next = false;
     var result;
-    var index = $.map(this.props.state.items, (e,i)=>{return e.key}).indexOf(this.props.state.video.key);
-    this.props.state.video = this.props.state.items[index-1];
-    this.props.state.update_state();
-
+    var index = $.map(this.props.state.items, (e,i)=>{return e.key}).indexOf(this.props.state.models.video.item.key);
+    this.props.state.models.video.set(this.props.state.items[index-1]);
   }
 
   play(prev){
@@ -40,7 +40,7 @@ class Player extends React.Component {
       node.addEventListener('canplay', (e)=>{ 
         var target = e.target;
         target.play(); 
-        this.props.state.models.recent.use(`movie/${this.props.state.video.key}`);
+        this.props.state.models.recent.use(`movie/${this.video().key}`);
         
       });
       node.addEventListener('ended', (e)=>{ this.next(); });
@@ -71,13 +71,13 @@ class Player extends React.Component {
       var spacer = (height - new_h) / 2;
 
       $(this.dom()).css({width: new_w, height: new_h});
-      $(this.refs.spacer.getDOMNode()).css({height: spacer});
+      $(this.refs.spacer).css({height: spacer});
     }
     setTimeout(()=>{ this.size_loop()}, 200)
   }
 
   capture(){
-    var c = this.refs.canvas.getDOMNode();
+    var c = this.refs.canvas;
     var v = this.dom();
     var context = c.getContext('2d');
     c.width = v.videoWidth;
@@ -142,7 +142,7 @@ class Player extends React.Component {
   componentDidUpdate(prev, prevState){ this.play(prev); }
   video_name(){
     if(!!this.video_url()){
-      return this.props.state.video.name;
+      return this.video().name;
     } else {
       return null;
     }

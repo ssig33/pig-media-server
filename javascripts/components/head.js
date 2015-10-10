@@ -49,7 +49,7 @@ class CustomList extends React.Component{
 class SearchBox extends React.Component {
   submit(event){
     event.preventDefault();
-    var query = this.refs.input.getDOMNode().value;
+    var query = this.refs.input.value;
     var url = `/?query=${encodeURIComponent(query)}`
     history.pushState(url, '', url);
     this.props.state.initialize();
@@ -70,7 +70,7 @@ class SearchBox extends React.Component {
   componentDidUpdate(){
     var query = decodeURIComponent(this.props.state.controller.query());
     if(query == 'undefined' || query == 'null' || !query){query = ''}
-    this.refs.input.getDOMNode().value = query;
+    this.refs.input.value = query;
   }
 
 

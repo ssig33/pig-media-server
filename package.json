@@ -2,7 +2,8 @@
   "main": "javascript/main.js",
   "description": "music",
   "dependencies": {
-    "react": "^0.13.3",
+    "react": "",
+    "react-dom": "",
     "moment": "",
     "moment-timezone": "",
     "jquery": ""

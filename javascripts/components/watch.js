@@ -1,14 +1,7 @@
 class ChromeCast extends React.Component {
-  is_video(){
-    var e = ext(this.props.item.name);
-    return e == 'mp4' || e == 'flv';
-  }
+  is_video(){ var e = ext(this.props.item.name); return e == 'mp4' || e == 'flv'; }
 
-  click(){
-    window.chrome_cast(this.props.item.url, this.props.item.key)
-  }
-
-  set_video(){ this.props.state.set_video(this.props.item); }
+  click(){ window.chrome_cast(this.props.item.url, this.props.item.key) } 
   render(){
     return <span>
       {this.is_video() ?
@@ -33,7 +26,7 @@ class Watch extends React.Component {
     return e == 'mp4' || e == 'flv';
   }
 
-  set_video(){ this.props.state.set_video(this.props.item); }
+  set_video(){ this.props.state.models.video.set(this.props.item); }
   render(){
     return <span>
       {this.is_video() ?

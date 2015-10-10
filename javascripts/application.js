@@ -1,4 +1,5 @@
 window.React = require('react');
+window.ReactDOM = require('react-dom');
 window.$ = window.jQuery = require('jquery');
 window.moment = require('moment-timezone');
 
@@ -6,6 +7,8 @@ require('./chromecast.js');
 
 require('./utils.js');
 require('./controller.js');
+
+require('./event_dispatcher.js');
 
 require('./recent.js');
 require('./video.js');
@@ -24,7 +27,7 @@ class Application extends React.Component {
     super(props);
     this.controller = new Controller();
     this.recent = new Recent(this);
-    this.video = new Video(this);
+    this.video = new Video();
     this.custom_list = new CustomList(this);
 
     this.state = {
@@ -34,7 +37,6 @@ class Application extends React.Component {
       recent: {},
       video: null,
 
-      set_video: (item)=>{this.video.set(item)},
       open: (link)=>{this.open(link)},
       initialize: ()=>{this.initialize()},
       update_state: ()=>{this.update_state()},
@@ -43,6 +45,8 @@ class Application extends React.Component {
 
       models: {video: this.video, recent: this.recent, custom_list: this.custom_list}
     }
+
+    this.state.models.video.addEventListener('videoUpdated', ()=>{ this.setState(this.state); });
 
     window.addEventListener('popstate',(ev)=>{ this.initialize(); },false);
   }
@@ -107,7 +111,7 @@ class Application extends React.Component {
   }
 }
 
-React.render(<Application />, document.querySelector("#application"));
+ReactDOM.render(<Application />, document.querySelector("#application"));
 
 
 

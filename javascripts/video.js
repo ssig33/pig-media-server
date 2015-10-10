@@ -1,11 +1,9 @@
-class Video{
-  constructor(app){
-    this.app = app;
-  }
-
+class Video extends EventDispatcher{
   set(item){
-    this.app.state.video = item;
-    this.app.update_state();
+    this.item = null;
+    this.dispatchEvent({type: 'videoUpdated'});
+    this.item = item;
+    this.dispatchEvent({type: 'videoUpdated'});
   }
 }
 

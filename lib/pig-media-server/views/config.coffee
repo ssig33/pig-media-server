@@ -8,6 +8,7 @@ save = ->
     save_to_pig('consumer_secret', $('#consumer_secret').val())
     save_to_pig('consumer_key', $('#consumer_key').val())
     save_to_pig('remote', $('#remote').prop('checked'))
+    save_to_pig('animetick', $('#animetick').val())
 
 
 $ ->
@@ -23,4 +24,5 @@ $ ->
   get_from_pig('consumer_secret', (data)-> $('#consumer_secret').val(data))
   get_from_pig('token', (data)-> $('#token').val(data))
   get_from_pig('token_secret', (data)-> $('#token_secret').val(data))
+  get_from_pig('animetick', (data)-> $('#animetick').val(data))
 

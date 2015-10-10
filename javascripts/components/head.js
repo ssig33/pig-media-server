@@ -46,6 +46,15 @@ class CustomList extends React.Component{
   }
 }
 
+class Recommend extends React.Component{
+  click(){ this.props.state.open(`/recommend?name=${localStorage.user_id}`) }
+  render(){
+    return <span>
+      {!!localStorage.user_id ?  <a href='javascript:void(0)' onClick={()=> this.click()}><b>Recommend</b></a> : null}
+    </span>
+  }
+}
+
 class SearchBox extends React.Component {
   submit(event){
     event.preventDefault();
@@ -86,6 +95,8 @@ class SearchBox extends React.Component {
       <a href='javascript:void(0)' onClick={(e)=>this.click(e)} data-url='/latest'>Latest</a>
       <a href='/config'>Config</a>
       <a href='javascript:void(0)' onClick={()=> this.full_screen()}>Full Screen</a>
+      {this.props.state.config.recommend ? <Recommend state={this.props.state} /> : null}
+      <br />
       {custom_list}
     </form>
   }

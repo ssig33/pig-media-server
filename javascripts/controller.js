@@ -26,6 +26,12 @@ class Controller {
         result.api_url = `/api/r/custom?name=${this.params().name}`;
         $('title').text(decodeURIComponent(this.params().name));
         break;
+
+      case "/recommend":
+        result.page = "list";
+        result.api_url = `/api/r/recommend?name=${this.params().name}`;
+        $('title').text('Recommend');
+        break;
     }
     return result;
   }

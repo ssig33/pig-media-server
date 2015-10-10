@@ -106,6 +106,10 @@ EOF
       haml :react
     end
 
+    get '/recommend' do
+      haml :react
+    end
+
     get('/meta/:key'){@p = Pig.find(params[:key]);haml :meta}
     get('/sub/:key'){@p = Pig.find(params[:key]);haml :sub}
     get('/webvtt/:key'){@p = Pig.find(params[:key]); content_type :text; @p.webvtt}

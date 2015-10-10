@@ -32,6 +32,17 @@ module PigMediaServer
         list_to_json(Pig.find JSON.parse(open(c).read))
       end
 
+      get '/api/r/recommend' do
+        content_type :json
+        list = []
+        begin
+          keys = open("#{config['user_data_path']}/recommend/#{params[:name]}").read.split("\n")
+          list = Pig.find(keys)
+        rescue
+        end
+        list_to_json(list)
+      end
+
       get '/api/r/search' do
         content_type :json
         list_to_json(Pig.search params.merge(page: page))

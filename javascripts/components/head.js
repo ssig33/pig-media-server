@@ -95,7 +95,7 @@ class SearchBox extends React.Component {
       <a href='javascript:void(0)' onClick={(e)=>this.click(e)} data-url='/latest'>Latest</a>
       <a href='/config'>Config</a>
       <a href='javascript:void(0)' onClick={()=> this.full_screen()}>Full Screen</a>
-      {this.props.state.config.recommend ? <Recommend state={this.props.state} /> : null}
+      <Recommend state={this.props.state} />
       <br />
       {custom_list}
     </form>

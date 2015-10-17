@@ -38,6 +38,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sinatra-flash'
   gem.add_dependency 'twitter'
   gem.add_dependency 'thor'
+  gem.add_dependency 'mechanize'
   gem.add_dependency 'activesupport'
 
 end

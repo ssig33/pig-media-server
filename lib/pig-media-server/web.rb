@@ -110,7 +110,10 @@ EOF
       haml :react
     end
 
-    get('/meta/:key'){@p = Pig.find(params[:key]);haml :meta}
+    #get('/meta/:key'){@p = Pig.find(params[:key]);haml :meta}
+    get('/meta/:key') do
+      haml :react
+    end
     get('/sub/:key'){@p = Pig.find(params[:key]);haml :sub}
     get('/webvtt/:key'){@p = Pig.find(params[:key]); content_type :text; @p.webvtt}
     get '/delete/:key' do

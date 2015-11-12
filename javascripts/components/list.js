@@ -7,7 +7,7 @@ class CustomLinks extends React.Component{
 class Item extends React.Component {
   mtime(){ 
     //moment(this.props.item.mtime)
-    return moment(new Date(this.props.item.mtime_to_i*1000)).clone().tz("Asia/Tokyo").format('YYYY/MM/DD hh:mm:ss'); 
+    return this.props.item.mtime;
   }
 
   render(){

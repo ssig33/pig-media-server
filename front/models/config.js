@@ -1,5 +1,5 @@
 import Base from './base'
-import jQuery from 'jQuery'
+import jQuery from 'jquery'
 
 export default class Config  extends Base {
   constructor(){ super(); this.data = {} }

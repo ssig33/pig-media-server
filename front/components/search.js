@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
-import jQuery from 'jQuery'
+import jQuery from 'jquery'
 
 import SearchList from '../models/list'
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import jQuery from 'jQuery'
+import jQuery from 'jquery'
 import {browserHistory} from 'react-router'
 
 export default class Pager extends React.Component {

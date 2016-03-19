@@ -1,5 +1,5 @@
 import Base from './base'
-import jQuery from 'jQuery'
+import jQuery from 'jquery'
 
 import Controller from '../controller'
 

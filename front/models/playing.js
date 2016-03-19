@@ -1,5 +1,5 @@
 import Base from './base'
-import jQuery from 'jQuery'
+import jQuery from 'jquery'
 
 export default class Playing extends Base {
   set(item){

@@ -1,17 +1,15 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router'
-import jQuery from 'jQuery'
+import jQuery from 'jquery'
 
 import Controller from '../controller'
 
 var controller = new Controller();
 
 class CustomList extends React.Component {
-  click(){
-    this.props.state.open(`/custom?name=${encodeURIComponent(this.props.name)}`)
-  }
+  url(){ return `/custom?name=${encodeURIComponent(this.props.name)}` }
   render(){
-    return <a href='javascript:void(0)' onClick={()=> this.click()}>{this.props.name}</a>
+    return <Link to={this.url()}>{this.props.name}</Link>
   }
 }
 
@@ -45,13 +43,14 @@ export default class SearchBox extends React.Component {
   render(){
     var query = this.query();
     if(query == 'undefined' || query == 'null' || !query){query = ''}
-    var c_list = jQuery.map(custom_list.list, (v,k)=>{return <CustomList key={k} name={k} state={this.props.state}/>});
+    var c_list = jQuery.map(custom_list.data, (v,k)=>{return <CustomList key={k} name={k} state={this.props.state}/>});
     return <form onSubmit={(e)=> this.submit(e)}>
       <input ref='input' defaultValue={query} onChange={()=>{this.change()}}/><button>Search</button>
       <Link to='/latest'>Latest</Link>
       <Link to='/config'>Config</Link>
       <Recommend state={this.props.state} />
       <br />
+      {c_list}
       </form>
   }
 }

@@ -11,6 +11,7 @@ import SearchBox from './components/search_box'
 import Head from './components/head'
 import Latest from './components/latest'
 import Recommend from './components/recommend'
+import Custom from './components/custom'
 
 import Config from './models/config'
 import Session from './models/session'
@@ -59,6 +60,7 @@ var route = <Router history={browserHistory}>
   <Route path="/" name='app' component={Application}>
     <IndexRoute component={Index} />
     <Route path='/recommend' component={Recommend} />
+    <Route path='/custom' component={Custom} />
     <Route path='/latest' component={Latest} />
   </Route>
 </Router>

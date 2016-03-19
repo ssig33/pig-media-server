@@ -13,7 +13,7 @@ module PigMediaServer
         a = $f.select.to_a
         open("backup.json", "w"){|f|
           a.each_with_index{|x,i|
-            f.puts [x._key, x.path, x.metadata, x.srt, x.mtime].to_json
+            f.puts [x._key, x.path, x.metadata, x.srt, x.mtime, x.size].to_json
             puts "#{i+1} / #{a.count}" if i%100 ==0
           }
         }
@@ -44,6 +44,7 @@ module PigMediaServer
           $f[x[0]].metadata = x[2]
           $f[x[0]].srt = x[3]
           $f[x[0]].mtime = x[4]
+          $f[x[0]].size = x[5]
           puts "#{i+1} / #{json.count}" if i%100 == 0 or i+1 == json.count
         }
       end
@@ -56,12 +57,6 @@ module PigMediaServer
           $f.delete x._key
           next
         end
-        unless File.exist? x.path
-          puts x.path
-          $f.delete x._key
-          next
-        end
-        x.mtime = File::Stat.new(x.path).mtime.to_i
         puts "#{i+1} / #{ary.count}" if (i+1)%1000 == 0 or i+1 == ary.count
       }
       lost.sort.each{|x| puts x}

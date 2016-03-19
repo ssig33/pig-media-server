@@ -1,12 +1,14 @@
-class Player extends React.Component {
+import React from 'react';
+
+export default class Player extends React.Component {
   constructor(props){
     super(props);
     this.current_url = '';
   }
-  close(){ this.props.state.models.video.set(null); }
+  close(){ playing.set(null); }
   dom(){ return this.refs.video; }
 
-  video(){ return this.props.state.models.video.item; }
+  video(){ return playing.item; }
 
   video_url(){
     var url = null;
@@ -40,8 +42,7 @@ class Player extends React.Component {
       node.addEventListener('canplay', (e)=>{ 
         var target = e.target;
         target.play(); 
-        this.props.state.models.recent.use(`movie/${this.video().key}`);
-        
+        recent.use(`movie/${this.video().key}`);
       });
       node.addEventListener('ended', (e)=>{ this.next(); });
       node.load();
@@ -167,5 +168,3 @@ class Player extends React.Component {
     </div>
   }
 }
-
-window.Player = Player;

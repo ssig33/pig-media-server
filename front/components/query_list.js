@@ -1,3 +1,5 @@
+import React from  'react'
+
 class Item extends React.Component {
   url(){ return `/?query=${encodeURIComponent(this.props.query)}` }
 
@@ -24,12 +26,11 @@ class Item extends React.Component {
   }
 }
 
-class QueryList extends React.Component {
+export default class QueryList extends React.Component {
   constructor(props){
     super(props);
     this.state = {};
     this.state.list = [];
-    this.controller = new Controller()
   }
 
   update_list(){
@@ -43,26 +44,13 @@ class QueryList extends React.Component {
     this.update_list();
   }
 
-  show(){
-    if(location.pathname == '/'){
-      if(!this.controller.query()){
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false
-    }
-  }
-
   render(){
     var items = $.map(this.state.list, (query)=>{
       return <Item key={query} query={query} state={this.props.state} update_list={()=> this.update_list()}/>
     });
     return <div>
-    {this.show() ? items : null}
+    {items}
     </div>
   }
 }
 
-window.QueryList = QueryList;

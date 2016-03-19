@@ -1,4 +1,5 @@
 require 'active_support/concern'
+require 'open-uri'
 module PigMediaServer
   module API
     extend ActiveSupport::Concern
@@ -11,7 +12,7 @@ module PigMediaServer
     end
 
     def list_to_json list
-      list.map{|x| 
+      list.map{|x|
         hash = x.to_hash
         hash['custom_links'] = partial :_custom_links, locals: {record: x}
         hash['metadata'] = !!x.metadata and x.metadata != ''
@@ -40,12 +41,29 @@ module PigMediaServer
           list = Pig.find(keys)
         rescue
         end
+
         list_to_json(list)
       end
 
       get '/api/r/search' do
         content_type :json
         list_to_json(Pig.search params.merge(page: page))
+      end
+
+      get '/api/r/external' do
+        content_type :json
+        if config['external_pigs']
+          config['external_pigs'].map{|x|
+            q = request.query_string
+            list = JSON.parse( open("#{x['url_base']}api/r/search?#{q}", http_basic_authentication: x['basic']).read)
+            list = list.map{|y|
+              y['url'].sub!(x['rule'][0], x['rule'][1])
+              y 
+            }
+          }.flatten.to_json
+        else
+          [].to_json
+        end
       end
 
       get '/api/r/config' do
@@ -79,6 +97,7 @@ module PigMediaServer
           Groonga['QueryList'].add(key)
           Groonga['QueryList'][key].query = params[:query]
         end
+
         {result: true}.to_json
       end
 
@@ -88,8 +107,8 @@ module PigMediaServer
         if Groonga['QueryList'][key]
           Groonga['QueryList'].delete key
         end
-        {result: true}.to_json
 
+        {result: true}.to_json
       end
     end
   end

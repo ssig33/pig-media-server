@@ -13,7 +13,7 @@ module PigMediaServer
         a = $f.select.to_a
         open("backup.json", "w"){|f|
           a.each_with_index{|x,i|
-            f.puts [x._key, x.path, x.metadata, x.srt].to_json
+            f.puts [x._key, x.path, x.metadata, x.srt, x.mtime].to_json
             puts "#{i+1} / #{a.count}" if i%100 ==0
           }
         }
@@ -43,6 +43,7 @@ module PigMediaServer
           $f[x[0]].path = x[1]
           $f[x[0]].metadata = x[2]
           $f[x[0]].srt = x[3]
+          $f[x[0]].mtime = x[4]
           puts "#{i+1} / #{json.count}" if i%100 == 0 or i+1 == json.count
         }
       end

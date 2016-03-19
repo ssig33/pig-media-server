@@ -1,11 +1,8 @@
 import React from  'react'
+import {Link} from 'react-router'
 
 class Item extends React.Component {
   url(){ return `/?query=${encodeURIComponent(this.props.query)}` }
-
-  click(){
-    this.props.state.open(this.url());
-  }
 
   delete_query(){
     if(confirm('Really?')){
@@ -16,9 +13,7 @@ class Item extends React.Component {
   }
   render(){
     return <span className='main_span'>
-      <a href='javascript:void(0)' onClick={()=> this.click()}>
-        {this.props.query}
-      </a>
+      <Link to={this.url()}> {this.props.query} </Link>
       <a href='javascript:void(0)' className='delete' onClick={()=> this.delete_query()}>
         Delete
       </a>

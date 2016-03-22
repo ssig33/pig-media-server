@@ -16,6 +16,7 @@ export default class Recommend extends React.Component {
     this.mounted = true;
     $('title').text("Recommned - Pig Media Server");
     recommend.load(this.props.location.query.name);
+    window.list = recommend;
   }
   componentWillUnmount(){ this.mounted = false; }
   render(){
@@ -25,5 +26,16 @@ export default class Recommend extends React.Component {
     return <div>
       <p>{items}</p>
     </div>
+  }
+
+  next(){
+    var index = this.list.map((e,i)=>{return e.key}).indexOf(playing.item.key);
+    var item = null
+    while(index > -1){
+      index = index - 1;
+      item = this.list[index];
+      if(item.type == 'video'){break}
+    }
+    if(item){ playing.set(item); }
   }
 }

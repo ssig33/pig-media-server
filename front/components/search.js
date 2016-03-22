@@ -64,6 +64,7 @@ export default class Search extends React.Component {
   }
   componentDidMount(){
     this.mounted = true;
+    window.list = list;
     this.search();
   }
   componentDidUpdate(prevProps){

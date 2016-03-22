@@ -17,6 +17,7 @@ export default class Recommend extends React.Component {
     this.mounted = true;
     $('title').text("Latest - Pig Media Server");
     latest.load(this.props.location.query.page);
+    window.list = latest;
   }
   componentWillUnmount(){ this.mounted = false; }
   render(){

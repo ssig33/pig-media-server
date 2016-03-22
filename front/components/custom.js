@@ -16,6 +16,7 @@ export default class Custom extends React.Component {
     this.mounted = true;
     $('title').text("Pig Media Server");
     custom.load(this.props.location.query.name);
+    window.list = custom;
   }
   componentDidUpdate(prevProps){
     if(this.props.location.query != prevProps.location.query){

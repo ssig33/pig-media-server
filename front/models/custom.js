@@ -27,5 +27,15 @@ export default class CustomList extends Base {
       });
     }
   }
-
+  
+  next(){
+    var index = this.list.map((e,i)=>{return e.key}).indexOf(playing.item.key);
+    var item = null
+    while(index > -1){
+      index = index - 1;
+      item = this.list[index];
+      if(item.type == 'video'){break}
+    }
+    if(item){ playing.set(item); }
+  }
 }

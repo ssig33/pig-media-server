@@ -30,10 +30,7 @@ export default class Player extends React.Component {
   }
 
   next(){
-    var next = false;
-    var result;
-    var index = $.map(this.props.state.items, (e,i)=>{return e.key}).indexOf(this.props.state.models.video.item.key);
-    this.props.state.models.video.set(this.props.state.items[index-1]);
+    if(!!list){ list.next() };
   }
 
   play(prev){

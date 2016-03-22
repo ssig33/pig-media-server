@@ -1,5 +1,4 @@
 import Base from './base'
-import jQuery from 'jquery'
 
 import Controller from '../controller'
 
@@ -31,10 +30,16 @@ export default class SearchList extends Base {
 
   external_fetch(){
     if(!!config.data.external_pigs){
-      jQuery.get('/api/r/external', this.query).done((data)=>{
-        this.list = this.list.concat(data);
-        this.sort();
-        this.dispatchEvent({type: 'loaded'});
+      config.data.external_pigs.forEach((e,i)=>{
+        var query = JSON.parse(JSON.stringify(this.query));
+        query.i = i;
+        query.method = 'search'
+        jQuery.get('/api/r/external',query).done((data)=>{
+          this.list = this.list.concat(data);
+          this.sort();
+          this.dispatchEvent({type: 'loaded'});
+        });
+
       });
     }
   }

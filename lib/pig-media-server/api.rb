@@ -30,7 +30,11 @@ module PigMediaServer
       get '/api/r/custom' do
         content_type :json
         c = config['custom_list'][params[:name]]
-        list_to_json(Pig.find JSON.parse(open(c).read))
+        if c and File.exists? c
+          list_to_json(Pig.find JSON.parse(open(c).read))
+        else
+          [].to_json
+        end
       end
 
       get '/api/r/recommend' do
@@ -53,14 +57,13 @@ module PigMediaServer
       get '/api/r/external' do
         content_type :json
         if config['external_pigs']
-          config['external_pigs'].map{|x|
-            q = request.query_string
-            list = JSON.parse( open("#{x['url_base']}api/r/search?#{q}", http_basic_authentication: x['basic']).read)
-            list = list.map{|y|
-              y['url'].sub!(x['rule'][0], x['rule'][1])
-              y 
-            }
-          }.flatten.to_json
+          x = config['external_pigs'][params[:i].to_i]
+          q = request.query_string
+          list = JSON.parse( open("#{x['url_base']}api/r/#{params[:method]}?#{q}", http_basic_authentication: x['basic']).read)
+          list = list.map{|y|
+            y['url'].sub!(x['rule'][0], x['rule'][1])
+            y
+          }.to_json
         else
           [].to_json
         end

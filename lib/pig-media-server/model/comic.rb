@@ -1,5 +1,5 @@
 require 'zipruby'
-require 'RMagick'
+require 'rmagick'
 
 class Comic
   attr_accessor :record, :config

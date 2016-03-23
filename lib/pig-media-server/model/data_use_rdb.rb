@@ -10,8 +10,8 @@ ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 tables =  ActiveRecord::Base.connection.tables
 
-unless tables.index('app_datas')
-  ActiveRecord::Migration.create_table :app_datas do |t|
+unless tables.index('app_data')
+  ActiveRecord::Migration.create_table :app_data do |t|
     t.string :key
     t.string :original_key
     t.text :value

@@ -35,29 +35,7 @@ unless tables.index('recents')
   end
 end
 
-class AppData < ActiveRecord::Base
-  def self.find key
-    key = Digest::MD5.hexdigest(key)
-    a = self.where(key: key).first
-    if a
-      a.parse
-    else
-      nil
-    end
-  end
-
-  def self.set key, value
-    a_key = Digest::MD5.hexdigest(key)
-    a = self.find_or_create_by(key: a_key)
-    a.value = value.to_json
-    a.original_key = key
-    a.save!
-  end
-
-  def self.all
-    super.map{|x| {key: x.original_key, value: x.parse}}
-  end
-
+class AppDatum < ActiveRecord::Base
   def parse
     val = self.value
     case val
@@ -75,6 +53,30 @@ class AppData < ActiveRecord::Base
     else
       val
     end
+  end
+end
+
+class AppData
+  def self.find key
+    key = Digest::MD5.hexdigest(key)
+    a = AppDatum.where(key: key).first
+    if a
+      a.parse
+    else
+      nil
+    end
+  end
+
+  def self.set key, value
+    a_key = Digest::MD5.hexdigest(key)
+    a = AppDatum.find_or_create_by(key: a_key)
+    a.value = value.to_json
+    a.original_key = key
+    a.save!
+  end
+
+  def self.all
+    AppDatum.all.map{|x| {key: x.original_key, value: x.parse}}
   end
 end
 

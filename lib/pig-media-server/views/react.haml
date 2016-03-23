@@ -19,4 +19,7 @@
     if(user_id != ''){ localStorage.user_id = user_id }
   }
 
-%script(src="/bundle.js")
+- ENV['BUNDLE_JS_URL']
+  %script{src: ENV['BUNDLE_JS_URL'] }
+- else
+  %script(src="/bundle.js")

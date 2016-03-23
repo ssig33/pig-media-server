@@ -63,6 +63,16 @@ module PigMediaServer
           list = list.map{|y|
             y['url'].sub!(x['rule'][0], x['rule'][1])
             y
+          }.reject{|y|
+            if x['ignore'] and x['ignore'][params[:method]]
+              flag = false
+              x['ignore'][params[:method]].each do |s|
+                flag = true if y['url'] =~ Regexp.new(s)
+              end
+              flag
+            else
+              false
+            end
           }.to_json
         else
           [].to_json

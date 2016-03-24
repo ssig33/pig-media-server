@@ -15,6 +15,8 @@ require 'redcarpet'
 require 'json'
 require 'twitter'
 require 'tempfile'
+require 'tmpdir'
+
 
 module PigMediaServer
   CONFIG = Pit.get 'Pig Media Sever'
@@ -30,36 +32,39 @@ module PigMediaServer
 
   class Gyazo
     def self.tweet url, comment, key, secret, token, token_secret, c
-      $config = $config ||Pit.get("Pig Media Server")
-      name = $config['gyazo_path'] + "/#{rand(256**16).to_s(16)}.png"
-      jpg = name.sub(/png$/, 'jpg')
-      img = url.sub(/data:image\/png;base64,/, '').unpack('m').first
-      open(name, 'w'){|f| f.puts img}
-      system "gm", "convert", name, jpg
-      client = Twitter::REST::Client.new do |config|
-        config.consumer_key = key
-        config.consumer_secret = secret
-        config.access_token = token
-        config.access_token_secret = token_secret
-      end 
-      client.update_with_media(comment.to_s, open(jpg))# rescue nil
-      FileUtils.rm name
-      FileUtils.rm jpg
+      Dir.mktmpdir do |dir|
+        name = dir + "/#{rand(256**16).to_s(16)}.png"
+        jpg = name.sub(/png$/, 'jpg')
+        img = url.sub(/data:image\/png;base64,/, '').unpack('m').first
+        open(name, 'w'){|f| f.puts img}
+        system "gm", "convert", name, jpg
+        client = Twitter::REST::Client.new do |config|
+          config.consumer_key = key
+          config.consumer_secret = secret
+          config.access_token = token
+          config.access_token_secret = token_secret
+        end
+
+        client.update_with_media(comment.to_s, open(jpg))# rescue nil
+        FileUtils.rm name
+        FileUtils.rm jpg
+      end
     end
+
     def self.post url, point
       imagedata = url.sub(/data:image\/png;base64,/, '').unpack('m').first
       boundary = '----BOUNDARYBOUNDARY----'
-      id = rand(256**16).to_s(16) 
+      id = rand(256**16).to_s(16)
 
       data = <<EOF
 --#{boundary}\r
 content-disposition: form-data; name="id"\r
 \r
-#{id}\r
+      #{id}\r
 --#{boundary}\r
 content-disposition: form-data; name="imagedata"; filename="gyazo.com"\r
 \r
-#{imagedata}\r
+      #{imagedata}\r
 --#{boundary}--\r
 EOF
       header ={
@@ -80,14 +85,14 @@ EOF
   class Web < Sinatra::Base
     register Sinatra::Flash
     include PigMediaServer::API
-    
+
     configure do
       set :haml, escape_html: true
       set :haml, attr_wrapper: '"'
       set :logging, true
       use Rack::Session::Cookie, key: 'pigmeidaserver', secret: $session_secret || rand(256**16).to_s(16)
     end
-    
+
     get '/' do
       haml :react
     end
@@ -114,6 +119,7 @@ EOF
     get('/meta/:key') do
       haml :react
     end
+
     get('/sub/:key'){@p = Pig.find(params[:key]);haml :sub}
     get('/webvtt/:key'){@p = Pig.find(params[:key]); content_type :text; @p.webvtt}
     get '/delete/:key' do
@@ -125,7 +131,6 @@ EOF
       redirect params[:href]
     end
 
-
     get '/read/:key' do
       if request.xhr?
         @record = Pig.find params[:key] rescue nil
@@ -135,6 +140,7 @@ EOF
         raise
       end
     end
+
     get('/book/info/:key'){ content_type :json; Pig.find(params[:key]).comic.info(params[:page]).to_json}
     get '/book/image' do
       image, type = Pig.find(params[:id]).comic.page(params[:page])
@@ -152,6 +158,7 @@ EOF
       content_type :json
       {url: url}.to_json
     end
+
     post '/gyazo/tweet' do
       consumer_key = UserData.load session[:user_id], 'consumer_key'
       consumer_secret = UserData.load session[:user_id], 'consumer_secret'
@@ -161,14 +168,13 @@ EOF
       true
     end
 
-
     get '/remote' do
       if request.xhr? and params[:key]
         return partial :_link, locals: {l: Pig.find(params[:key])}
       end
+
       return haml :remote
     end
-
 
     get '/sessions' do
       if session[:user_id]
@@ -188,7 +194,6 @@ EOF
         redirect "/ao/#{params[:key]}"
       end
     end
-
 
     post '/sessions' do
       session[:user_id] = params[:user_id]
@@ -226,13 +231,14 @@ EOF
     get('/*.css'){scss params[:splat].first.to_sym}
     get('/bundle.js'){content_type :js; open(File::dirname(__FILE__)+"/views/bundle.js").read}
     get('/*.js'){coffee params[:splat].first.to_sym}
-    
+
     post '/api/save' do
       key = Digest::MD5.hexdigest(params[:name]).to_s
       FileUtils.mkdir_p "#{config['user_data_path']}/api_data"
       open("#{config['user_data_path']}/api_data/#{key}", 'w'){|x| x.puts params[:body]}
       true
     end
+
     get '/api/get' do
       key = Digest::MD5.hexdigest(params[:name]).to_s
       FileUtils.mkdir_p "#{config['user_data_path']}/api_data"
@@ -242,6 +248,7 @@ EOF
         nil
       end
     end
+
     post '/api/capapi' do
       record = Groonga['Files'][params[:key]]
       name = "#{rand(256**16).to_s(16)}.jpg"
@@ -262,17 +269,19 @@ EOF
       haml :index
     end
 
-
     helpers do
       def config
         $config = Pit.get("Pig Media Server") unless $config
         $config['page_title'] = 'Pig Media Server' unless $config['page_title']
         $config
       end
+
       def h str; CGI.escapeHTML str.to_s; end
+
       def remote?
         UserData.load(session[:user_id], 'remote')
       end
+
       def partial(template, *args)
         options = args.last.is_a?(Hash) ? args.pop : {}
         options.merge!(:layout => false)
@@ -283,40 +292,41 @@ EOF
         else
           haml(template, options)
         end
-      end 
+      end
 
       def star? key
         Stars.star?(session[:user_id], key)
       end
-      
+
       def markdown str
-         str = str.to_s
-         Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(hard_wrap: true), autolink: true, fenced_code_blocks: true).render(str)
+        str = str.to_s
+        Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(hard_wrap: true), autolink: true, fenced_code_blocks: true).render(str)
       end
-      
+
       def number_to_human_size(number, precision = 1)
         number = begin
-          Float(number)
-        rescue ArgumentError, TypeError
-          return number
-        end
+                   Float(number)
+                 rescue ArgumentError, TypeError
+                   return number
+                 end
+
         case
-          when number.to_i == 1 then
-            "1 Byte"
-          when number < 1024 then
-            "%d Bytes" % number
-          when number < 1048576 then
-            "%.#{precision}f KB"  % (number / 1024)
-          when number < 1073741824 then
-            "%.#{precision}f MB"  % (number / 1048576)
-          when number < 1099511627776 then
-            "%.#{precision}f GB"  % (number / 1073741824)
-          else
-            "%.#{precision}f TB"  % (number / 1099511627776)
+        when number.to_i == 1 then
+          "1 Byte"
+        when number < 1024 then
+          "%d Bytes" % number
+        when number < 1048576 then
+          "%.#{precision}f KB"  % (number / 1024)
+        when number < 1073741824 then
+          "%.#{precision}f MB"  % (number / 1048576)
+        when number < 1099511627776 then
+          "%.#{precision}f GB"  % (number / 1073741824)
+        else
+          "%.#{precision}f TB"  % (number / 1099511627776)
         end.sub(/([0-9]\.\d*?)0+ /, '\1 ' ).sub(/\. /,' ').encode('UTF-8')
       rescue
         ""
-      end  
+      end
 
       def title
         base = $config['page_title']
@@ -326,5 +336,4 @@ EOF
       end
     end
   end
-
 end

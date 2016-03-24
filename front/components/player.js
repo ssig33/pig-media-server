@@ -155,6 +155,7 @@ export default class Player extends React.Component {
         ref='video'
         src={this.video_url()} 
         controls='controls'
+        crossOrigin='anonymous'
         onClick={()=> this.pause()}   
       />
       <canvas className='none' ref='canvas' />

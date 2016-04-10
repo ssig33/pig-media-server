@@ -14,7 +14,7 @@ export default class CustomList extends Base {
   external_fetch(name){
     if(!!config.data.external_pigs){
       config.data.external_pigs.forEach((e,i)=>{
-        if(e.method.indexOf('custom') > 0){
+        if(e.method.indexOf('custom') > -1){
           var query = {};
           query.i = i;
           query.method = 'custom';

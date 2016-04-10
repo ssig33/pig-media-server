@@ -47,7 +47,7 @@ export default class SearchBox extends React.Component {
     return <form onSubmit={(e)=> this.submit(e)}>
       <input ref='input' defaultValue={query} onChange={()=>{this.change()}}/><button>Search</button>
       <Link to='/latest'>Latest</Link>
-      <Link to='/config'>Config</Link>
+      <a href='/config'>Config</a>
       <Recommend state={this.props.state} />
       <br />
       {c_list}

@@ -1,3 +1,3 @@
 module PigMediaServer
-  VERSION = "100000"
+  VERSION = "1000000"
 end

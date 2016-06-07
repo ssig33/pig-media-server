@@ -38,6 +38,7 @@ module PigMediaServer
         img = url.sub(/data:image\/png;base64,/, '').unpack('m').first
         open(name, 'w'){|f| f.puts img}
         system "gm", "convert", name, jpg
+        jpg = name unless File.exists? jpg
         client = Twitter::REST::Client.new do |config|
           config.consumer_key = key
           config.consumer_secret = secret
@@ -46,8 +47,8 @@ module PigMediaServer
         end
 
         client.update_with_media(comment.to_s, open(jpg))# rescue nil
-        FileUtils.rm name
-        FileUtils.rm jpg
+        FileUtils.rm name rescue nil
+        FileUtils.rm jpg rescue nil
       end
     end
 
